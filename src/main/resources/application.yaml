@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: evernight
+  ai:
+    mcp:
+      server:
+        protocol: STATELESS
+        name: evernight-mcp
+        version: 0.0.1
+        type: SYNC
+        streamable-http:
+          mcp-endpoint: /mcp
+  threads:
+    virtual:
+      enabled: true
+maven:
+  repository:
+    # Maven 仓库白名单；第一个地址作为默认仓库。
+    repositories:
+      - https://repo1.maven.org/maven2
+      - https://maven.aliyun.com/repository/public
+npm:
+  registry:
+    # npm registry 白名单；第一个地址作为默认 registry。
+    repositories:
+      - https://registry.npmjs.org
+      - https://registry.npmmirror.com
+pypi:
+  repository:
+    # PyPI JSON API 白名单；第一个地址作为默认仓库。
+    repositories:
+      - https://pypi.org/pypi
+      - https://pypi.tuna.tsinghua.edu.cn/pypi
+evernight:
+  http:
+    # 访问上游服务时使用的代理类型，可通过启动参数 --evernight.http.proxy-type=http/https/socks5 覆盖。
+    proxy-type: none
+    proxy-host:
+    proxy-port:
+    connect-timeout-millis: 5000
+    read-timeout-millis: 10000
+  cache:
+    enabled: true
+    maximum-size: 10000
+    maven-ttl-seconds: 21600
+    npm-ttl-seconds: 21600
+    pypi-ttl-seconds: 21600
+    osv-ttl-seconds: 3600
+  rate-limit:
+    enabled: true
+    # CDN 或网关注入的真实客户端 IP 请求头；为空时依次回退 X-Forwarded-For、X-Real-IP、remoteAddr。
+    client-ip-header: X-Evernight-Client-IP
+    max-requests: 120
+    window-seconds: 60
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+server:
+  port: 25924

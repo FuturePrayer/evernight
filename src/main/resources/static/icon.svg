@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Evernight</title>
+  <desc id="desc">A night-themed dependency intelligence icon with a crescent moon and connected package nodes.</desc>
+  <defs>
+    <linearGradient id="bg" x1="18" y1="12" x2="112" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#151a33"/>
+      <stop offset="0.48" stop-color="#4c1d95"/>
+      <stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="line" x1="34" y1="38" x2="94" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#67e8f9"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.41 0 0 0 0 0.91 0 0 0 0 0.98 0 0 0 0.75 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <path d="M92 27c-8 1-15 5-20 12a33 33 0 0 0 38 51 44 44 0 1 1-18-63Z" fill="#eef4ff" opacity="0.94"/>
+  <path d="M37 48 64 33l27 15v32L64 95 37 80V48Z" fill="#08111f" opacity="0.64"/>
+  <path d="M37 48 64 33l27 15-27 15-27-15Z" fill="#111c31" stroke="url(#line)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M37 48v32l27 15 27-15V48" fill="none" stroke="url(#line)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M64 63v32M37 80l27-17 27 17" fill="none" stroke="#67e8f9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+  <g filter="url(#glow)">
+    <circle cx="36" cy="48" r="6" fill="#c4b5fd"/>
+    <circle cx="64" cy="33" r="6" fill="#67e8f9"/>
+    <circle cx="92" cy="48" r="6" fill="#c4b5fd"/>
+    <circle cx="64" cy="95" r="6" fill="#67e8f9"/>
+  </g>
+</svg>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evernight MCP Tools</title>
+  <meta name="description" content="Evernight MCP Server 工具首页，展示可用工具、入参、出参和服务状态。">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <nav class="nav">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><img src="/icon.svg" alt=""></span>
+          <div>
+            <strong>Evernight</strong>
+            <small>Streamable HTTP MCP Server</small>
+          </div>
+        </div>
+        <div class="status-pill" id="serviceStatus" aria-live="polite">
+          <span class="status-dot status-checking"></span>
+          <span>正在检测服务状态</span>
+        </div>
+      </nav>
+
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">为 vibe coding 智能体准备的生态情报工具集</p>
+          <h1>依赖查询、包元数据和漏洞情报，一站式交给 Evernight。</h1>
+          <p class="hero-text">
+            Evernight 通过 MCP streamable HTTP 暴露结构化工具，帮助智能体稳定查询 Maven、npm、PyPI 与 OSV 数据，避免临时抓网页和不可靠搜索。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#tools">查看工具</a>
+            <a class="button ghost" href="/actuator/health" target="_blank" rel="noreferrer">健康检查</a>
+          </div>
+        </div>
+        <aside class="hero-card glass">
+          <div class="card-header">
+            <span>服务端点</span>
+            <span class="chip">SYNC</span>
+          </div>
+          <code class="endpoint">/mcp</code>
+          <dl class="metrics">
+            <div><dt>工具数量</dt><dd>7</dd></div>
+            <div><dt>协议</dt><dd>STATELESS</dd></div>
+            <div><dt>首页</dt><dd>/</dd></div>
+          </dl>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="section overview">
+        <div class="section-heading">
+          <p class="eyebrow">Capabilities</p>
+          <h2>公共服务增强</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><span>🛡️</span><h3>镜像白名单</h3><p>Maven、npm、PyPI 镜像地址必须命中白名单，避免任意 URL 带来的 SSRF 风险。</p></article>
+          <article class="feature-card"><span>⚡</span><h3>查询缓存</h3><p>使用 Caffeine 缓存上游查询结果，降低 registry 和 OSV 压力。</p></article>
+          <article class="feature-card"><span>🚦</span><h3>IP 限流</h3><p>支持 CDN 自定义客户端 IP 请求头，保护公共服务稳定性。</p></article>
+          <article class="feature-card"><span>🧭</span><h3>统一错误</h3><p>统一返回错误码、可重试标记、路径和时间戳，便于智能体处理。</p></article>
+        </div>
+      </section>
+
+      <section class="section repository-section">
+        <div class="section-heading split">
+          <div>
+            <p class="eyebrow">Repository Whitelist</p>
+            <h2>可用镜像地址</h2>
+          </div>
+          <div class="repository-note">工具入参可选；传入时必须使用下列地址之一；第一条地址作为默认镜像。</div>
+        </div>
+        <div class="repository-grid" id="repositoryGrid"></div>
+      </section>
+
+      <section class="section" id="tools">
+        <div class="section-heading split">
+          <div>
+            <p class="eyebrow">Tools</p>
+            <h2>MCP 工具目录</h2>
+          </div>
+          <div class="tool-filter" role="tablist" aria-label="工具分类筛选">
+            <button class="filter active" data-filter="all">全部</button>
+            <button class="filter" data-filter="maven">Maven</button>
+            <button class="filter" data-filter="npm">npm</button>
+            <button class="filter" data-filter="pypi">PyPI</button>
+            <button class="filter" data-filter="security">安全</button>
+          </div>
+        </div>
+        <div class="tool-grid" id="toolGrid"></div>
+      </section>
+
+      <section class="section response-section">
+        <div class="section-heading">
+          <p class="eyebrow">Error Contract</p>
+          <h2>统一错误响应</h2>
+        </div>
+        <div class="code-panel">
+          <div class="code-title">示例</div>
+          <pre><code>{
+  "errorCode": "UPSTREAM_ERROR",
+  "message": "请求 OSV API 失败，status=502",
+  "status": 502,
+  "retryable": true,
+  "path": "/mcp",
+  "timestamp": "2026-05-25T04:00:00Z"
+}</code></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="toolCardTemplate">
+    <article class="tool-card">
+      <div class="tool-topline">
+        <span class="tool-category"></span>
+        <span class="tool-method">MCP Tool</span>
+      </div>
+      <h3></h3>
+      <p class="tool-description"></p>
+      <div class="io-grid">
+        <div>
+          <h4>入参</h4>
+          <ul class="inputs"></ul>
+        </div>
+        <div>
+          <h4>出参</h4>
+          <ul class="outputs"></ul>
+        </div>
+      </div>
+      <details>
+        <summary>调用示例</summary>
+        <pre><code class="example"></code></pre>
+      </details>
+    </article>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

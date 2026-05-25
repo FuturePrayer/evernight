@@ -1,0 +1,25 @@
+services:
+  evernight:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: evernight-mcp:local
+    container_name: evernight-mcp
+    ports:
+      - "25924:25924"
+    environment:
+      SERVER_PORT: 25924
+      MAVEN_REPOSITORY_REPOSITORIES_0: https://repo1.maven.org/maven2
+      MAVEN_REPOSITORY_REPOSITORIES_1: https://maven.aliyun.com/repository/public
+      NPM_REGISTRY_REPOSITORIES_0: https://registry.npmjs.org
+      NPM_REGISTRY_REPOSITORIES_1: https://registry.npmmirror.com
+      PYPI_REPOSITORY_REPOSITORIES_0: https://pypi.org/pypi
+      PYPI_REPOSITORY_REPOSITORIES_1: https://pypi.tuna.tsinghua.edu.cn/pypi
+      EVERNIGHT_HTTP_PROXY_TYPE: none
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:25924/actuator/health | grep -q UP"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
