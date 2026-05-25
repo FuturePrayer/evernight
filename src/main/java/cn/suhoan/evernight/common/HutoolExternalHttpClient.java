@@ -2,6 +2,7 @@ package cn.suhoan.evernight.common;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.URI;
 import java.util.Map;
 
 import cn.hutool.http.HttpRequest;
@@ -61,19 +62,23 @@ public class HutoolExternalHttpClient implements ExternalHttpClient {
     }
 
     Proxy createProxy() {
-        String proxyType = properties.getProxyType();
-        if (!StringUtils.hasText(proxyType) || "none".equalsIgnoreCase(proxyType)) {
+        String proxyUrl = properties.getProxyUrl();
+        if (!StringUtils.hasText(proxyUrl)) {
             return null;
         }
-        if (!StringUtils.hasText(properties.getProxyHost()) || properties.getProxyPort() == null) {
-            throw new IllegalArgumentException("启用代理时必须配置 evernight.http.proxy-host 和 evernight.http.proxy-port");
+        URI uri = URI.create(proxyUrl.trim());
+        if (StringUtils.hasText(uri.getUserInfo())) {
+            throw new IllegalArgumentException("代理地址不支持认证信息: " + proxyUrl);
         }
-        Proxy.Type type = switch (proxyType.trim().toLowerCase()) {
+        if (!StringUtils.hasText(uri.getScheme()) || !StringUtils.hasText(uri.getHost()) || uri.getPort() < 1) {
+            throw new IllegalArgumentException("代理地址必须使用 协议://host:端口 格式");
+        }
+        Proxy.Type type = switch (uri.getScheme().toLowerCase()) {
             case "http", "https" -> Proxy.Type.HTTP;
             case "socks5" -> Proxy.Type.SOCKS;
-            default -> throw new IllegalArgumentException("不支持的代理类型: " + proxyType);
+            default -> throw new IllegalArgumentException("不支持的代理协议: " + uri.getScheme());
         };
-        return new Proxy(type, new InetSocketAddress(properties.getProxyHost(), properties.getProxyPort()));
+        return new Proxy(type, new InetSocketAddress(uri.getHost(), uri.getPort()));
     }
 
 }

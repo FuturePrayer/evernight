@@ -93,46 +93,35 @@ docker compose down
 
 ### Repository Whitelist
 
-Tool parameters named `repositoryBaseUrl` or `registryBaseUrl` are optional. When provided, the URL must match the whitelist for its ecosystem. When omitted, the first URL in the whitelist array is used as the default mirror.
+Tool parameters named `repositoryBaseUrl` or `registryBaseUrl` are optional. When provided, the URL must match the whitelist for its ecosystem. When omitted, the first URL in the comma-separated list is used as the default mirror.
 
-```yaml
-maven:
-  repository:
-    repositories:
-      - https://repo1.maven.org/maven2
-      - https://maven.aliyun.com/repository/public
-npm:
-  registry:
-    repositories:
-      - https://registry.npmjs.org
-      - https://registry.npmmirror.com
-pypi:
-  repository:
-    repositories:
-      - https://pypi.org/pypi
-      - https://pypi.tuna.tsinghua.edu.cn/pypi
-```
+### Common Environment Variables
 
-Use indexed environment variables for array configuration:
-
-```yaml
-environment:
-  MAVEN_REPOSITORY_REPOSITORIES_0: https://repo1.maven.org/maven2
-  MAVEN_REPOSITORY_REPOSITORIES_1: https://maven.aliyun.com/repository/public
-  NPM_REGISTRY_REPOSITORIES_0: https://registry.npmjs.org
-  NPM_REGISTRY_REPOSITORIES_1: https://registry.npmmirror.com
-  PYPI_REPOSITORY_REPOSITORIES_0: https://pypi.org/pypi
-  PYPI_REPOSITORY_REPOSITORIES_1: https://pypi.tuna.tsinghua.edu.cn/pypi
-```
+| Variable | Default | Description |
+| --- | --- | --- |
+| `SERVER_PORT` | `25924` | HTTP server port. |
+| `MAVEN_REPOSITORY_REPOSITORIES` | `https://repo1.maven.org/maven2,https://maven.aliyun.com/repository/public` | Maven repository whitelist, comma-separated; the first item is the default repository. |
+| `NPM_REGISTRY_REPOSITORIES` | `https://registry.npmjs.org,https://registry.npmmirror.com` | npm registry whitelist, comma-separated; the first item is the default registry. |
+| `PYPI_REPOSITORY_REPOSITORIES` | `https://pypi.org/pypi,https://pypi.tuna.tsinghua.edu.cn/pypi` | PyPI JSON API whitelist, comma-separated; the first item is the default repository. |
+| `EVERNIGHT_HTTP_PROXY_URL` | empty | Upstream proxy URL. Supports `http://127.0.0.1:7890`, `https://127.0.0.1:7890`, and `socks5://127.0.0.1:1080`. |
+| `EVERNIGHT_HTTP_CONNECT_TIMEOUT_MILLIS` | `5000` | Upstream HTTP connection timeout in milliseconds. |
+| `EVERNIGHT_HTTP_READ_TIMEOUT_MILLIS` | `10000` | Upstream HTTP read timeout in milliseconds. |
+| `EVERNIGHT_RATE_LIMIT_ENABLED` | `true` | Enables IP rate limiting. |
+| `EVERNIGHT_RATE_LIMIT_CLIENT_IP_HEADER` | `X-Evernight-Client-IP` | Header that carries the real client IP from a CDN or gateway. |
+| `EVERNIGHT_RATE_LIMIT_MAX_REQUESTS` | `120` | Maximum requests per client IP within the rate-limit window. |
+| `EVERNIGHT_RATE_LIMIT_WINDOW_SECONDS` | `60` | Rate-limit window length in seconds. |
+| `EVERNIGHT_ONLINE_USERS_ENABLED` | `true` | Enables online user counting. |
+| `EVERNIGHT_ONLINE_USERS_WINDOW_SECONDS` | `300` | Online user activity window in seconds. |
+| `EVERNIGHT_ONLINE_USERS_MAXIMUM_SIZE` | `100000` | Maximum retained client identifiers for online user counting. |
+| `EVERNIGHT_CACHE_ENABLED` | `true` | Enables upstream query caching. |
+| `EVERNIGHT_CACHE_MAXIMUM_SIZE` | `10000` | Maximum cache entries. |
 
 ### HTTP Proxy
 
 ```yaml
 evernight:
   http:
-    proxy-type: none # none, http, https, socks5
-    proxy-host:
-    proxy-port:
+    proxy-url: # http://127.0.0.1:7890, https://127.0.0.1:7890, socks5://127.0.0.1:1080
     connect-timeout-millis: 5000
     read-timeout-millis: 10000
 ```
@@ -161,7 +150,19 @@ evernight:
     window-seconds: 60
 ```
 
-Client IP resolution order: configured `client-ip-header`, `X-Forwarded-For`, `X-Real-IP`, then `remoteAddr`.
+Client IP resolution order: configured `client-ip-header`, `X-Forwarded-For`, `X-Real-IP`, then `remoteAddr`. The home page, static assets, home-page support APIs, and health checks are excluded from rate limiting.
+
+### Online Users
+
+Online users are counted as unique client IPs that sent requests within the recent activity window. The home page, static assets, home-page support APIs, and `/actuator/*` health-check requests are excluded. The web console shows the online count only when the service health status is `UP`.
+
+```yaml
+evernight:
+  online-users:
+    enabled: true
+    window-seconds: 300
+    maximum-size: 100000
+```
 
 ## Tests
 

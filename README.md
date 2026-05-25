@@ -95,46 +95,35 @@ docker compose down
 
 ### 镜像白名单
 
-工具入参中的 `repositoryBaseUrl` 或 `registryBaseUrl` 都是可选参数。传入时必须是对应生态白名单中的完整镜像地址；不传时使用白名单数组的第一个地址作为默认镜像。
+工具入参中的 `repositoryBaseUrl` 或 `registryBaseUrl` 都是可选参数。传入时必须是对应生态白名单中的完整镜像地址；不传时使用逗号分隔列表中的第一个地址作为默认镜像。
 
-```yaml
-maven:
-  repository:
-    repositories:
-      - https://repo1.maven.org/maven2
-      - https://maven.aliyun.com/repository/public
-npm:
-  registry:
-    repositories:
-      - https://registry.npmjs.org
-      - https://registry.npmmirror.com
-pypi:
-  repository:
-    repositories:
-      - https://pypi.org/pypi
-      - https://pypi.tuna.tsinghua.edu.cn/pypi
-```
+### 常用环境变量
 
-环境变量使用数组索引配置，例如：
-
-```yaml
-environment:
-  MAVEN_REPOSITORY_REPOSITORIES_0: https://repo1.maven.org/maven2
-  MAVEN_REPOSITORY_REPOSITORIES_1: https://maven.aliyun.com/repository/public
-  NPM_REGISTRY_REPOSITORIES_0: https://registry.npmjs.org
-  NPM_REGISTRY_REPOSITORIES_1: https://registry.npmmirror.com
-  PYPI_REPOSITORY_REPOSITORIES_0: https://pypi.org/pypi
-  PYPI_REPOSITORY_REPOSITORIES_1: https://pypi.tuna.tsinghua.edu.cn/pypi
-```
+| 变量名 | 默认值 | 说明 |
+| --- | --- | --- |
+| `SERVER_PORT` | `25924` | HTTP 服务端口。 |
+| `MAVEN_REPOSITORY_REPOSITORIES` | `https://repo1.maven.org/maven2,https://maven.aliyun.com/repository/public` | Maven 仓库白名单，逗号分隔，第一项为默认仓库。 |
+| `NPM_REGISTRY_REPOSITORIES` | `https://registry.npmjs.org,https://registry.npmmirror.com` | npm registry 白名单，逗号分隔，第一项为默认 registry。 |
+| `PYPI_REPOSITORY_REPOSITORIES` | `https://pypi.org/pypi,https://pypi.tuna.tsinghua.edu.cn/pypi` | PyPI JSON API 白名单，逗号分隔，第一项为默认仓库。 |
+| `EVERNIGHT_HTTP_PROXY_URL` | 空 | 上游代理地址，支持 `http://127.0.0.1:7890`、`https://127.0.0.1:7890`、`socks5://127.0.0.1:1080`。 |
+| `EVERNIGHT_HTTP_CONNECT_TIMEOUT_MILLIS` | `5000` | 上游 HTTP 连接超时时间，单位毫秒。 |
+| `EVERNIGHT_HTTP_READ_TIMEOUT_MILLIS` | `10000` | 上游 HTTP 读取超时时间，单位毫秒。 |
+| `EVERNIGHT_RATE_LIMIT_ENABLED` | `true` | 是否启用 IP 限流。 |
+| `EVERNIGHT_RATE_LIMIT_CLIENT_IP_HEADER` | `X-Evernight-Client-IP` | CDN 或网关注入的真实客户端 IP 请求头。 |
+| `EVERNIGHT_RATE_LIMIT_MAX_REQUESTS` | `120` | 每个客户端 IP 在限流窗口内允许的最大请求数。 |
+| `EVERNIGHT_RATE_LIMIT_WINDOW_SECONDS` | `60` | 限流窗口长度，单位秒。 |
+| `EVERNIGHT_ONLINE_USERS_ENABLED` | `true` | 是否启用在线人数统计。 |
+| `EVERNIGHT_ONLINE_USERS_WINDOW_SECONDS` | `300` | 在线人数活跃窗口长度，单位秒。 |
+| `EVERNIGHT_ONLINE_USERS_MAXIMUM_SIZE` | `100000` | 在线人数统计最多保留的客户端标识数量。 |
+| `EVERNIGHT_CACHE_ENABLED` | `true` | 是否启用上游查询缓存。 |
+| `EVERNIGHT_CACHE_MAXIMUM_SIZE` | `10000` | 查询缓存最大条目数。 |
 
 ### HTTP 代理
 
 ```yaml
 evernight:
   http:
-    proxy-type: none # none, http, https, socks5
-    proxy-host:
-    proxy-port:
+    proxy-url: # http://127.0.0.1:7890, https://127.0.0.1:7890, socks5://127.0.0.1:1080
     connect-timeout-millis: 5000
     read-timeout-millis: 10000
 ```
@@ -163,7 +152,19 @@ evernight:
     window-seconds: 60
 ```
 
-客户端 IP 解析优先级：`client-ip-header` 配置的请求头、`X-Forwarded-For`、`X-Real-IP`、`remoteAddr`。
+客户端 IP 解析优先级：`client-ip-header` 配置的请求头、`X-Forwarded-For`、`X-Real-IP`、`remoteAddr`。首页、静态资源、首页支撑接口和健康检查不会参与限流。
+
+### 在线人数
+
+在线人数按最近窗口内有请求的唯一客户端 IP 统计。首页、静态资源、首页支撑接口和 `/actuator/*` 健康检查请求不会计入人数；首页在服务健康状态为 `UP` 时会显示在线人数。
+
+```yaml
+evernight:
+  online-users:
+    enabled: true
+    window-seconds: 300
+    maximum-size: 100000
+```
 
 ## 测试
 

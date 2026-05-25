@@ -33,11 +33,16 @@ public final class RepositoryWhitelistResolver {
         if (repositories == null) {
             return normalized;
         }
-        for (String url : repositories) {
-            if (StringUtils.hasText(url)) {
-                String normalizedUrl = normalizeBaseUrl(url);
-                if (!normalized.contains(normalizedUrl)) {
-                    normalized.add(normalizedUrl);
+        for (String value : repositories) {
+            if (!StringUtils.hasText(value)) {
+                continue;
+            }
+            for (String url : value.split(",")) {
+                if (StringUtils.hasText(url)) {
+                    String normalizedUrl = normalizeBaseUrl(url);
+                    if (!normalized.contains(normalizedUrl)) {
+                        normalized.add(normalizedUrl);
+                    }
                 }
             }
         }

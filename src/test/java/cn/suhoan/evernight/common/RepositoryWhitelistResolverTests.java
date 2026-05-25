@@ -24,6 +24,13 @@ class RepositoryWhitelistResolverTests {
     }
 
     @Test
+    void normalizeRepositoriesSplitsCommaSeparatedEnvironmentValue() {
+        assertThat(RepositoryWhitelistResolver.normalizeRepositories(
+                List.of("https://repo1.maven.org/maven2, https://maven.aliyun.com/repository/public/")))
+                .containsExactly("https://repo1.maven.org/maven2", "https://maven.aliyun.com/repository/public");
+    }
+
+    @Test
     void resolveRejectsUnknownUrl() {
         assertThatThrownBy(() -> RepositoryWhitelistResolver.resolve("https://evil.example/internal",
                 List.of("https://repo1.maven.org/maven2"), "Maven 仓库"))

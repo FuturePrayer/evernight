@@ -10,7 +10,6 @@ class HutoolExternalHttpClientTests {
     @Test
     void createProxyReturnsNullWhenDisabled() {
         HttpClientProperties properties = new HttpClientProperties();
-        properties.setProxyType("none");
         HutoolExternalHttpClient client = new HutoolExternalHttpClient(properties);
 
         assertThat(client.createProxy()).isNull();
@@ -19,9 +18,7 @@ class HutoolExternalHttpClientTests {
     @Test
     void createProxyCreatesHttpProxy() {
         HttpClientProperties properties = new HttpClientProperties();
-        properties.setProxyType("http");
-        properties.setProxyHost("127.0.0.1");
-        properties.setProxyPort(8080);
+        properties.setProxyUrl("http://127.0.0.1:8080");
         HutoolExternalHttpClient client = new HutoolExternalHttpClient(properties);
 
         assertThat(client.createProxy()).isNotNull();
@@ -29,14 +26,35 @@ class HutoolExternalHttpClientTests {
     }
 
     @Test
-    void createProxyRejectsMissingHostOrPort() {
+    void createProxyCreatesSocks5Proxy() {
         HttpClientProperties properties = new HttpClientProperties();
-        properties.setProxyType("socks5");
+        properties.setProxyUrl("socks5://127.0.0.1:1080");
+        HutoolExternalHttpClient client = new HutoolExternalHttpClient(properties);
+
+        assertThat(client.createProxy()).isNotNull();
+        assertThat(client.createProxy().type()).isEqualTo(java.net.Proxy.Type.SOCKS);
+    }
+
+    @Test
+    void createProxyRejectsMissingPort() {
+        HttpClientProperties properties = new HttpClientProperties();
+        properties.setProxyUrl("http://127.0.0.1");
         HutoolExternalHttpClient client = new HutoolExternalHttpClient(properties);
 
         assertThatThrownBy(client::createProxy)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("proxy-host");
+                .hasMessageContaining("协议://host:端口");
+    }
+
+    @Test
+    void createProxyRejectsAuthenticationInfo() {
+        HttpClientProperties properties = new HttpClientProperties();
+        properties.setProxyUrl("http://user:pass@127.0.0.1:8080");
+        HutoolExternalHttpClient client = new HutoolExternalHttpClient(properties);
+
+        assertThatThrownBy(client::createProxy)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("不支持认证信息");
     }
 
 }

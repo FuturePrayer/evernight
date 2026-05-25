@@ -16,19 +16,9 @@ public class HttpClientProperties {
     private int readTimeoutMillis = 10000;
 
     /**
-     * 代理类型：none、http、https、socks5。
+     * 代理地址，格式为 协议://host:端口；为空时不启用代理。
      */
-    private String proxyType = "none";
-
-    /**
-     * 代理主机地址，默认不启用代理。
-     */
-    private String proxyHost;
-
-    /**
-     * 代理端口。
-     */
-    private Integer proxyPort;
+    private String proxyUrl;
 
     public int getConnectTimeoutMillis() {
         return connectTimeoutMillis;
@@ -46,28 +36,12 @@ public class HttpClientProperties {
         this.readTimeoutMillis = readTimeoutMillis;
     }
 
-    public String getProxyType() {
-        return proxyType;
+    public String getProxyUrl() {
+        return proxyUrl;
     }
 
-    public void setProxyType(String proxyType) {
-        this.proxyType = proxyType;
-    }
-
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-
-    public Integer getProxyPort() {
-        return proxyPort;
-    }
-
-    public void setProxyPort(Integer proxyPort) {
-        this.proxyPort = proxyPort;
+    public void setProxyUrl(String proxyUrl) {
+        this.proxyUrl = proxyUrl;
     }
 
 }
