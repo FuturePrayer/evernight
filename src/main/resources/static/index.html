@@ -39,10 +39,10 @@
           <p class="eyebrow">为 vibe coding 智能体准备的生态情报工具集</p>
           <h1>依赖查询、包元数据和漏洞情报，一站式交给 Evernight。</h1>
           <p class="hero-text">
-            Evernight 通过 MCP streamable HTTP 暴露结构化工具，帮助智能体稳定查询 Maven、npm、PyPI 与 OSV 数据，避免临时抓网页和不可靠搜索。
+            Evernight 通过 MCP streamable HTTP 暴露结构化工具，帮助智能体稳定查询 Maven、npm、PyPI 与 OSV 数据；浏览器页面也可以直接调用工具。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#tools">查看工具</a>
+            <a class="button primary" href="/tools.html">打开工具台</a>
             <a class="button ghost" href="/actuator/health" target="_blank" rel="noreferrer">健康检查</a>
           </div>
         </div>
@@ -86,23 +86,6 @@
         <div class="repository-grid" id="repositoryGrid"></div>
       </section>
 
-      <section class="section" id="tools">
-        <div class="section-heading split">
-          <div>
-            <p class="eyebrow">Tools</p>
-            <h2>MCP 工具目录</h2>
-          </div>
-          <div class="tool-filter" role="tablist" aria-label="工具分类筛选">
-            <button class="filter active" data-filter="all">全部</button>
-            <button class="filter" data-filter="maven">Maven</button>
-            <button class="filter" data-filter="npm">npm</button>
-            <button class="filter" data-filter="pypi">PyPI</button>
-            <button class="filter" data-filter="security">安全</button>
-          </div>
-        </div>
-        <div class="tool-grid" id="toolGrid"></div>
-      </section>
-
       <section class="section response-section">
         <div class="section-heading">
           <p class="eyebrow">Error Contract</p>
@@ -122,31 +105,6 @@
       </section>
     </main>
   </div>
-
-  <template id="toolCardTemplate">
-    <article class="tool-card">
-      <div class="tool-topline">
-        <span class="tool-category"></span>
-        <span class="tool-method">MCP Tool</span>
-      </div>
-      <h3></h3>
-      <p class="tool-description"></p>
-      <div class="io-grid">
-        <div>
-          <h4>入参</h4>
-          <ul class="inputs"></ul>
-        </div>
-        <div>
-          <h4>出参</h4>
-          <ul class="outputs"></ul>
-        </div>
-      </div>
-      <details>
-        <summary>调用示例</summary>
-        <pre><code class="example"></code></pre>
-      </details>
-    </article>
-  </template>
 
   <script src="/app.js" defer></script>
 </body>

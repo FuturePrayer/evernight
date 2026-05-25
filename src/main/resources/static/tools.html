@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evernight Tools Console</title>
+  <meta name="description" content="Evernight 浏览器工具台，可直接调用 Maven、npm、PyPI 和 OSV 查询工具。">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="tool-page-header">
+      <nav class="nav">
+        <a class="brand brand-link" href="/">
+          <span class="brand-mark" aria-hidden="true"><img src="/icon.svg" alt=""></span>
+          <div>
+            <strong>Evernight</strong>
+            <small>Tools Console</small>
+          </div>
+        </a>
+        <div class="nav-actions">
+          <a class="button ghost compact" href="/">首页</a>
+          <a class="icon-link github-link" href="https://github.com/FuturePrayer/evernight" target="_blank" rel="noreferrer" aria-label="在 GitHub 查看 FuturePrayer/evernight" title="GitHub: FuturePrayer/evernight">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 1.25C6.06 1.25 1.25 6.18 1.25 12.27c0 4.86 3.08 8.98 7.35 10.43.54.1.73-.24.73-.53v-2.03c-2.99.67-3.62-1.48-3.62-1.48-.49-1.27-1.2-1.61-1.2-1.61-.98-.69.08-.68.08-.68 1.08.08 1.65 1.14 1.65 1.14.96 1.68 2.52 1.2 3.14.92.1-.72.38-1.2.68-1.48-2.39-.28-4.9-1.23-4.9-5.45 0-1.2.42-2.19 1.11-2.96-.11-.28-.48-1.4.11-2.92 0 0 .91-.3 2.96 1.13.86-.25 1.78-.37 2.69-.37.91 0 1.83.12 2.69.37 2.05-1.43 2.95-1.13 2.95-1.13.6 1.52.23 2.64.12 2.92.69.77 1.11 1.76 1.11 2.96 0 4.23-2.52 5.17-4.92 5.45.39.34.73 1.01.73 2.04v3.03c0 .29.19.63.74.52 4.26-1.45 7.34-5.57 7.34-10.43C22.75 6.18 17.94 1.25 12 1.25Z" />
+            </svg>
+          </a>
+        </div>
+      </nav>
+      <div class="tool-title-row">
+        <div>
+          <p class="eyebrow">Direct Invocation</p>
+          <h1>工具台</h1>
+        </div>
+        <div class="status-pill" id="serviceStatus" aria-live="polite">
+          <span class="status-dot status-checking"></span>
+          <span class="status-text">正在检测服务状态</span>
+          <span class="online-count" hidden></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="tools-layout">
+      <aside class="tool-sidebar">
+        <div class="tool-filter vertical" role="tablist" aria-label="工具分类筛选">
+          <button class="filter active" data-filter="all">全部</button>
+          <button class="filter" data-filter="maven">Maven</button>
+          <button class="filter" data-filter="npm">npm</button>
+          <button class="filter" data-filter="pypi">PyPI</button>
+          <button class="filter" data-filter="security">安全</button>
+        </div>
+        <div class="tool-list" id="toolList"></div>
+      </aside>
+
+      <section class="tool-workbench">
+        <div class="tool-workbench-header">
+          <div>
+            <span class="tool-category" id="selectedCategory">MAVEN</span>
+            <h2 id="selectedToolName"></h2>
+          </div>
+          <span class="tool-method">HTTP</span>
+        </div>
+        <p class="tool-description" id="selectedToolDescription"></p>
+        <form class="invoke-form" id="invokeForm">
+          <div class="field-grid" id="fieldGrid"></div>
+          <div class="challenge-panel">
+            <div>
+              <label for="challengeAnswer">人机校验</label>
+              <div class="challenge-question" id="challengeQuestion">加载中</div>
+            </div>
+            <button class="icon-button" type="button" id="refreshChallenge" title="刷新校验" aria-label="刷新校验">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.45 5.08 1 1 0 1 0-1.86.74A6 6 0 1 1 12 6c1.3 0 2.5.41 3.48 1.11L13.7 8.9A1 1 0 0 0 15.11 10.3l3.5-3.5a1 1 0 0 0 0-1.42l-3.5-3.5A1 1 0 0 0 13.7 3.3l1.95 1.95Z"/></svg>
+            </button>
+            <input id="challengeAnswer" name="challengeAnswer" autocomplete="off" inputmode="numeric" required>
+          </div>
+          <button class="button primary invoke-button" type="submit">调用工具</button>
+        </form>
+      </section>
+
+      <section class="result-panel">
+        <div class="result-header">
+          <h2>响应</h2>
+          <button class="icon-button" type="button" id="copyResult" title="复制响应" aria-label="复制响应">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V7Zm3-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-6ZM4 9a1 1 0 0 1 1 1v8a1 1 0 0 0 1 1h8a1 1 0 1 1 0 2H6a3 3 0 0 1-3-3v-8a1 1 0 0 1 1-1Z"/></svg>
+          </button>
+        </div>
+        <pre><code id="resultOutput">等待调用</code></pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js" defer></script>
+  <script src="/tools.js" defer></script>
+</body>
+</html>
