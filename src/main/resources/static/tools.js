@@ -42,12 +42,44 @@ const tools = [
     ]
   },
   {
+    name: "maven_dependency_detail",
+    category: "maven",
+    description: "查询指定 Maven 坐标和版本的 POM 依赖详情。",
+    fields: [
+      { name: "groupId", label: "groupId", required: true, placeholder: "org.springframework.boot" },
+      { name: "artifactId", label: "artifactId", required: true, placeholder: "spring-boot-starter-web" },
+      { name: "version", label: "版本", required: true, placeholder: "3.4.5" },
+      { name: "repositoryBaseUrl", label: "Maven 镜像地址", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
+    name: "maven_artifact_java_version",
+    category: "maven",
+    description: "只读取 POM 中声明的 Java 版本字段；这些字段表示目标兼容版本或要求的 Java 版本，不一定是实际执行编译的 JDK。",
+    fields: [
+      { name: "groupId", label: "groupId", required: true, placeholder: "org.springframework.boot" },
+      { name: "artifactId", label: "artifactId", required: true, placeholder: "spring-boot-starter-web" },
+      { name: "version", label: "版本", placeholder: "留空使用最新版本" },
+      { name: "repositoryBaseUrl", label: "Maven 镜像地址", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
     name: "npm_package_info",
     category: "npm",
     description: "查询 npm registry 包元数据，包括 latest、dist-tags、许可证、仓库和版本摘要。",
     fields: [
       { name: "packageName", label: "包名", required: true, placeholder: "@types/node" },
       { name: "versionLimit", label: "版本数量", type: "number", min: 1, max: 100, placeholder: "20" },
+      { name: "registryBaseUrl", label: "npm registry", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
+    name: "npm_package_version_detail",
+    category: "npm",
+    description: "查询 npm 指定版本元数据，包括依赖、engines、bin、deprecated 和 tarball 信息。",
+    fields: [
+      { name: "packageName", label: "包名", required: true, placeholder: "react" },
+      { name: "version", label: "版本", placeholder: "留空使用 latest" },
       { name: "registryBaseUrl", label: "npm registry", placeholder: "留空使用默认地址" }
     ]
   },
@@ -62,6 +94,16 @@ const tools = [
     ]
   },
   {
+    name: "pypi_release_files",
+    category: "pypi",
+    description: "查询 PyPI 指定 release 的 wheel/sdist 文件、哈希、大小、上传时间和 yanked 状态。",
+    fields: [
+      { name: "packageName", label: "包名", required: true, placeholder: "requests" },
+      { name: "version", label: "版本", placeholder: "留空使用最新版本" },
+      { name: "repositoryBaseUrl", label: "PyPI 仓库地址", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
     name: "osv_vulnerability_lookup",
     category: "security",
     description: "通过 OSV 查询 Maven、npm、PyPI 包的已知漏洞。",
@@ -69,6 +111,20 @@ const tools = [
       { name: "ecosystem", label: "生态", required: true, placeholder: "Maven / npm / PyPI" },
       { name: "packageName", label: "包名", required: true, placeholder: "com.fasterxml.jackson.core:jackson-databind" },
       { name: "version", label: "版本", placeholder: "2.9.0" }
+    ]
+  },
+  {
+    name: "osv_batch_vulnerability_lookup",
+    category: "security",
+    description: "批量查询 Maven、npm、PyPI 包的 OSV 已知漏洞。",
+    fields: [
+      {
+        name: "packages",
+        label: "包列表 JSON",
+        required: true,
+        multiline: true,
+        placeholder: '[{"ecosystem":"npm","packageName":"react","version":"18.2.0"},{"ecosystem":"Maven","packageName":"com.fasterxml.jackson.core:jackson-databind","version":"2.9.0"}]'
+      }
     ]
   }
 ];
@@ -104,19 +160,35 @@ function renderSelectedTool() {
   document.querySelector("#selectedToolName").textContent = selectedTool.name;
   document.querySelector("#selectedToolDescription").textContent = selectedTool.description;
   const grid = document.querySelector("#fieldGrid");
-  grid.innerHTML = selectedTool.fields.map(field => `
+  grid.innerHTML = selectedTool.fields.map(renderField).join("");
+  renderToolResult();
+}
+
+function renderField(field) {
+  const required = field.required ? "required" : "";
+  if (field.multiline) {
+    return `
+      <label class="field full-width">
+        <span>${escapeHtml(field.label)}${field.required ? " *" : ""}</span>
+        <textarea
+          name="${escapeHtml(field.name)}"
+          ${required}
+          placeholder="${escapeHtml(field.placeholder || "")}"></textarea>
+      </label>
+    `;
+  }
+  return `
     <label class="field">
       <span>${escapeHtml(field.label)}${field.required ? " *" : ""}</span>
       <input
         name="${escapeHtml(field.name)}"
         type="${field.type || "text"}"
-        ${field.required ? "required" : ""}
+        ${required}
         ${field.min ? `min="${field.min}"` : ""}
         ${field.max ? `max="${field.max}"` : ""}
         placeholder="${escapeHtml(field.placeholder || "")}">
     </label>
-  `).join("");
-  renderToolResult();
+  `;
 }
 
 function renderToolResult() {
@@ -156,6 +228,10 @@ function collectArguments(form) {
   selectedTool.fields.forEach(field => {
     const rawValue = String(formData.get(field.name) || "").trim();
     if (rawValue === "") {
+      return;
+    }
+    if (field.multiline) {
+      args[field.name] = JSON.parse(rawValue);
       return;
     }
     args[field.name] = field.type === "number" ? Number(rawValue) : rawValue;

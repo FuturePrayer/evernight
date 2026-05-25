@@ -3,7 +3,9 @@ package cn.suhoan.evernight.tool;
 
 import cn.suhoan.evernight.client.MavenArtifactClient;
 import cn.suhoan.evernight.model.MavenArtifactDetail;
+import cn.suhoan.evernight.model.MavenArtifactJavaVersion;
 import cn.suhoan.evernight.model.MavenArtifactSearchResult;
+import cn.suhoan.evernight.model.MavenDependencyDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
@@ -41,6 +43,28 @@ public class MavenArtifactTools {
         log.info("调用 MCP 工具 maven_artifact_detail，groupId={}, artifactId={}, repositoryBaseUrl={}",
                 groupId, artifactId, repositoryBaseUrl);
         return mavenArtifactClient.detail(groupId, artifactId, repositoryBaseUrl);
+    }
+
+    @Tool(name = "maven_dependency_detail", description = "查询指定 Maven 坐标和版本的 POM 依赖详情，包括 parent、dependencies 和 dependencyManagement。repositoryBaseUrl 可选，传入时必须是 Maven 仓库白名单中的镜像地址。")
+    public MavenDependencyDetail dependencyDetail(
+            @ToolParam(description = "Maven groupId，例如 org.springframework.boot") String groupId,
+            @ToolParam(description = "Maven artifactId，例如 spring-boot-starter-web") String artifactId,
+            @ToolParam(description = "Maven 版本号，例如 3.4.5") String version,
+            @ToolParam(required = false, description = "可选，本次查询使用的 Maven 仓库镜像地址，例如 https://repo1.maven.org/maven2 或 https://maven.aliyun.com/repository/public") String repositoryBaseUrl) {
+        log.info("调用 MCP 工具 maven_dependency_detail，groupId={}, artifactId={}, version={}, repositoryBaseUrl={}",
+                groupId, artifactId, version, repositoryBaseUrl);
+        return mavenArtifactClient.dependencyDetail(groupId, artifactId, version, repositoryBaseUrl);
+    }
+
+    @Tool(name = "maven_artifact_java_version", description = "只读取指定 Maven Artifact POM 中声明的 Java 版本字段，包括 maven.compiler.release/source/target、maven-compiler-plugin 和 maven-enforcer-plugin。注意：这些字段表示“目标兼容版本”或“要求的 Java 版本”，不一定是实际执行编译的 JDK。version 可选，留空时查询最新版本。repositoryBaseUrl 可选，传入时必须是 Maven 仓库白名单中的镜像地址。")
+    public MavenArtifactJavaVersion javaVersion(
+            @ToolParam(description = "Maven groupId，例如 org.springframework.boot") String groupId,
+            @ToolParam(description = "Maven artifactId，例如 spring-boot-starter-web") String artifactId,
+            @ToolParam(required = false, description = "Maven 版本号；留空使用最新版本") String version,
+            @ToolParam(required = false, description = "可选，本次查询使用的 Maven 仓库镜像地址，例如 https://repo1.maven.org/maven2 或 https://maven.aliyun.com/repository/public") String repositoryBaseUrl) {
+        log.info("调用 MCP 工具 maven_artifact_java_version，groupId={}, artifactId={}, version={}, repositoryBaseUrl={}",
+                groupId, artifactId, version, repositoryBaseUrl);
+        return mavenArtifactClient.javaVersion(groupId, artifactId, version, repositoryBaseUrl);
     }
 
 }

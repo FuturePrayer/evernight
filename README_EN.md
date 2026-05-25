@@ -45,9 +45,14 @@ Default endpoints:
 | `maven_version_list` | Query the full Maven version list. |
 | `maven_artifact_search` | Search Maven artifacts; non-Maven Central mirrors support exact `groupId` + `artifactId` lookup only. |
 | `maven_artifact_detail` | Query Maven artifact details, including POM description, licenses, SCM, and developers. |
+| `maven_dependency_detail` | Query dependency details for a Maven coordinate and version, including parent, dependencies, and dependencyManagement. |
+| `maven_artifact_java_version` | Read Java version declarations from the Maven artifact POM only; these fields indicate target compatibility or required Java version, not necessarily the JDK that actually performed the build. |
 | `npm_package_info` | Query npm package metadata, including `latest`, `dist-tags`, license, repository, dependencies, and version summary. |
+| `npm_package_version_detail` | Query npm metadata for a specific version, including dependencies, peerDependencies, engines, bin, deprecated, and tarball information. |
 | `pypi_package_info` | Query PyPI package metadata, including latest version, Python requirements, license, project URLs, and release summary. |
+| `pypi_release_files` | Query wheel/sdist files for a PyPI release, including hashes, size, upload time, and yanked status. |
 | `osv_vulnerability_lookup` | Query known vulnerabilities for Maven, npm, and PyPI packages through OSV. |
+| `osv_batch_vulnerability_lookup` | Batch query OSV known vulnerabilities for Maven, npm, and PyPI packages, up to 50 packages. |
 
 ## Quick Start
 

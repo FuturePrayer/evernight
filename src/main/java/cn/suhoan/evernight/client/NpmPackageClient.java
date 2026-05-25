@@ -3,6 +3,7 @@ package cn.suhoan.evernight.client;
 
 import cn.suhoan.evernight.config.NpmRegistryProperties;
 import cn.suhoan.evernight.model.NpmPackageInfo;
+import cn.suhoan.evernight.model.NpmPackageVersionDetail;
 import cn.suhoan.evernight.whitelist.NpmRegistryResolver;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @EnableConfigurationProperties(NpmRegistryProperties.class)
@@ -56,18 +58,18 @@ public class NpmPackageClient {
                 () -> doPackageInfo(packageName, versionLimit, effectiveRegistryBaseUrl));
     }
 
+    public NpmPackageVersionDetail versionDetail(String packageName, String version, String registryBaseUrl) {
+        String effectiveRegistryBaseUrl = registryResolver.resolve(registryBaseUrl);
+        String cacheKey = "version-detail:" + effectiveRegistryBaseUrl + ":" + packageName + ":" + version;
+        return cacheService.get("npm", cacheKey, cacheService.properties().getNpmTtlSeconds(),
+                () -> doVersionDetail(packageName, version, effectiveRegistryBaseUrl));
+    }
+
     NpmPackageInfo doPackageInfo(String packageName, Integer versionLimit, String registryBaseUrl) {
         String normalizedName = InputValidator.requireText(packageName, "packageName");
         int limit = InputValidator.clampPageSize(versionLimit, 20, 100);
         log.info("开始查询 npm 包信息，packageName={}，versionLimit={}，registry={}", normalizedName, limit, registryBaseUrl);
-        ExternalHttpResponse response = httpClient.get(buildPackageUrl(registryBaseUrl, normalizedName), Map.of("Accept", "application/json"));
-        if (response.isNotFound()) {
-            throw new IllegalArgumentException("未找到 npm 包: " + normalizedName);
-        }
-        if (!response.isSuccess()) {
-            throw new ExternalServiceException("请求 npm registry 失败，status=" + response.statusCode());
-        }
-        JsonNode root = jsonSupport.readTree(response.body());
+        JsonNode root = fetchPackageJson(registryBaseUrl, normalizedName);
         String latest = root.path("dist-tags").path("latest").asText(null);
         JsonNode latestVersion = root.path("versions").path(latest);
         NpmPackageInfo info = new NpmPackageInfo(root.path("name").asText(normalizedName), root.path("description").asText(null), latest,
@@ -76,6 +78,46 @@ public class NpmPackageClient {
                 limitedFieldNames(root.path("versions"), limit));
         log.info("npm 包信息查询完成，packageName={}，latestVersion={}，versionCount={}", normalizedName, latest, info.versions().size());
         return info;
+    }
+
+    NpmPackageVersionDetail doVersionDetail(String packageName, String version, String registryBaseUrl) {
+        String normalizedName = InputValidator.requireText(packageName, "packageName");
+        String normalizedVersion = StringUtils.hasText(version) ? version.trim() : null;
+        log.info("开始查询 npm 版本详情，packageName={}，version={}，registry={}", normalizedName, normalizedVersion, registryBaseUrl);
+        JsonNode root = fetchPackageJson(registryBaseUrl, normalizedName);
+        if (!StringUtils.hasText(normalizedVersion)) {
+            normalizedVersion = root.path("dist-tags").path("latest").asText(null);
+        }
+        if (!StringUtils.hasText(normalizedVersion)) {
+            throw new IllegalArgumentException("npm 包缺少 latest 版本: " + normalizedName);
+        }
+        JsonNode versionNode = root.path("versions").path(normalizedVersion);
+        if (versionNode.isMissingNode()) {
+            throw new IllegalArgumentException("未找到 npm 包版本: " + normalizedName + "@" + normalizedVersion);
+        }
+        JsonNode dist = versionNode.path("dist");
+        NpmPackageVersionDetail detail = new NpmPackageVersionDetail(versionNode.path("name").asText(normalizedName),
+                versionNode.path("version").asText(normalizedVersion), registryBaseUrl,
+                textOrNull(versionNode.path("description")), textOrNull(versionNode.path("license")),
+                textOrNull(versionNode.path("homepage")), readRepository(versionNode),
+                textOrNull(versionNode.path("deprecated")), toStringMap(versionNode.path("dependencies")),
+                toStringMap(versionNode.path("devDependencies")), toStringMap(versionNode.path("peerDependencies")),
+                toStringMap(versionNode.path("optionalDependencies")), toStringMap(versionNode.path("engines")),
+                readBin(versionNode.path("bin"), normalizedName), textOrNull(dist.path("tarball")),
+                textOrNull(dist.path("shasum")), textOrNull(dist.path("integrity")));
+        log.info("npm 版本详情查询完成，packageName={}，version={}", normalizedName, normalizedVersion);
+        return detail;
+    }
+
+    private JsonNode fetchPackageJson(String registryBaseUrl, String normalizedName) {
+        ExternalHttpResponse response = httpClient.get(buildPackageUrl(registryBaseUrl, normalizedName), Map.of("Accept", "application/json"));
+        if (response.isNotFound()) {
+            throw new IllegalArgumentException("未找到 npm 包: " + normalizedName);
+        }
+        if (!response.isSuccess()) {
+            throw new ExternalServiceException("请求 npm registry 失败，status=" + response.statusCode());
+        }
+        return jsonSupport.readTree(response.body());
     }
 
     static String encodePackageName(String packageName) {
@@ -105,6 +147,13 @@ public class NpmPackageClient {
             }
         }
         return values;
+    }
+
+    private static Map<String, String> readBin(JsonNode node, String packageName) {
+        if (node != null && node.isTextual()) {
+            return Map.of(packageName, node.asText());
+        }
+        return toStringMap(node);
     }
 
     private static List<String> limitedFieldNames(JsonNode node, int limit) {

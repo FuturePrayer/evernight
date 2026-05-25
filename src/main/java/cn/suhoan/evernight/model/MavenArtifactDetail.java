@@ -5,6 +5,7 @@ import cn.suhoan.evernight.model.MavenDeveloperInfo;
 import cn.suhoan.evernight.model.MavenLicenseInfo;
 import cn.suhoan.evernight.model.MavenScmInfo;
 import java.util.List;
+import java.util.Map;
 
 public record MavenArtifactDetail(
         String groupId,
@@ -18,5 +19,6 @@ public record MavenArtifactDetail(
         String url,
         List<MavenLicenseInfo> licenses,
         MavenScmInfo scm,
-        List<MavenDeveloperInfo> developers) {
+        List<MavenDeveloperInfo> developers,
+        Map<String, String> inheritedFromParent) {
 }
