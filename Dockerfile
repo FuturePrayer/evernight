@@ -10,8 +10,7 @@ WORKDIR /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
-RUN addgroup --system evernight && adduser --system --ingroup evernight evernight && chsh -s /bin/bash evernight
+RUN addgroup --system evernight && adduser --system --ingroup evernight evernight
 COPY --from=build /workspace/target/evernight.jar /app/evernight.jar
-USER evernight
 EXPOSE 25924
 ENTRYPOINT ["java", "-jar", "/app/evernight.jar"]
