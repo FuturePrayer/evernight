@@ -15,6 +15,8 @@ import org.springframework.util.StringUtils;
 @Service
 public class ToolInvocationService {
 
+    private final CargoCrateTools cargoCrateTools;
+
     private final MavenRepositoryTools mavenRepositoryTools;
 
     private final MavenArtifactTools mavenArtifactTools;
@@ -27,9 +29,10 @@ public class ToolInvocationService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public ToolInvocationService(MavenRepositoryTools mavenRepositoryTools, MavenArtifactTools mavenArtifactTools,
-            NpmPackageTools npmPackageTools, PypiPackageTools pypiPackageTools,
+    public ToolInvocationService(CargoCrateTools cargoCrateTools, MavenRepositoryTools mavenRepositoryTools,
+            MavenArtifactTools mavenArtifactTools, NpmPackageTools npmPackageTools, PypiPackageTools pypiPackageTools,
             OsvVulnerabilityTools osvVulnerabilityTools) {
+        this.cargoCrateTools = cargoCrateTools;
         this.mavenRepositoryTools = mavenRepositoryTools;
         this.mavenArtifactTools = mavenArtifactTools;
         this.npmPackageTools = npmPackageTools;
@@ -85,6 +88,18 @@ public class ToolInvocationService {
                     stringArg(args, "packageName"),
                     stringArg(args, "version"),
                     stringArg(args, "repositoryBaseUrl"));
+            case "cargo_crate_search" -> cargoCrateTools.search(
+                    stringArg(args, "keyword"),
+                    integerArg(args, "perPage"),
+                    stringArg(args, "registryBaseUrl"));
+            case "cargo_crate_info" -> cargoCrateTools.crateInfo(
+                    stringArg(args, "crateName"),
+                    integerArg(args, "versionLimit"),
+                    stringArg(args, "registryBaseUrl"));
+            case "cargo_crate_version_detail" -> cargoCrateTools.versionDetail(
+                    stringArg(args, "crateName"),
+                    stringArg(args, "version"),
+                    stringArg(args, "registryBaseUrl"));
             case "osv_vulnerability_lookup" -> osvVulnerabilityTools.lookup(
                     stringArg(args, "ecosystem"),
                     stringArg(args, "packageName"),

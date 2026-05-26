@@ -39,7 +39,7 @@
           <p class="eyebrow">为 vibe coding 智能体准备的生态情报工具集</p>
           <h1>依赖查询、包元数据和漏洞情报，一站式交给 Evernight。</h1>
           <p class="hero-text">
-            Evernight 通过 MCP streamable HTTP 暴露结构化工具，帮助智能体稳定查询 Maven、npm、PyPI 与 OSV 数据；浏览器页面也可以直接调用工具。
+            Evernight 通过 MCP streamable HTTP 暴露结构化工具，帮助智能体稳定查询 Maven、npm、PyPI、Cargo 与 OSV 数据；浏览器页面也可以直接调用工具。
           </p>
           <div class="hero-actions">
             <a class="button primary" href="/tools.html">打开工具台</a>
@@ -53,7 +53,7 @@
           </div>
           <code class="endpoint">/mcp</code>
           <dl class="metrics">
-            <div><dt>工具数量</dt><dd>12</dd></div>
+            <div><dt>工具数量</dt><dd>15</dd></div>
             <div><dt>协议</dt><dd>STATELESS</dd></div>
             <div><dt>首页</dt><dd>/</dd></div>
           </dl>
@@ -68,7 +68,7 @@
           <h2>公共服务增强</h2>
         </div>
         <div class="feature-grid">
-          <article class="feature-card"><span>🛡️</span><h3>镜像白名单</h3><p>Maven、npm、PyPI 镜像地址必须命中白名单，避免任意 URL 带来的 SSRF 风险。</p></article>
+          <article class="feature-card"><span>🛡️</span><h3>镜像白名单</h3><p>Maven、npm、PyPI、Cargo 镜像地址必须命中白名单，避免任意 URL 带来的 SSRF 风险。</p></article>
           <article class="feature-card"><span>⚡</span><h3>查询缓存</h3><p>使用 Caffeine 缓存上游查询结果，降低 registry 和 OSV 压力。</p></article>
           <article class="feature-card"><span>🚦</span><h3>IP 限流</h3><p>支持 CDN 自定义客户端 IP 请求头，保护公共服务稳定性。</p></article>
           <article class="feature-card"><span>🧭</span><h3>统一错误</h3><p>统一返回错误码、可重试标记、路径和时间戳，便于智能体处理。</p></article>

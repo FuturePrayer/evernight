@@ -17,7 +17,7 @@
 
 ## 简介
 
-Evernight 是一个基于 Spring AI MCP Server WebMVC 的 streamable HTTP MCP 服务。它把 Maven、npm、PyPI 和 OSV 的常用查询封装成结构化 MCP 工具，适合在 vibe coding、依赖升级、漏洞排查和自动化研发工作流中使用。
+Evernight 是一个基于 Spring AI MCP Server WebMVC 的 streamable HTTP MCP 服务。它把 Maven、npm、PyPI、Cargo 和 OSV 的常用查询封装成结构化 MCP 工具，适合在 vibe coding、依赖升级、漏洞排查和自动化研发工作流中使用。
 
 服务默认暴露：
 
@@ -28,9 +28,9 @@ Evernight 是一个基于 Spring AI MCP Server WebMVC 的 streamable HTTP MCP �
 
 ## 功能特性
 
-- 支持 Maven、npm、PyPI 包信息查询。
-- 支持 OSV 已知漏洞查询。
-- Maven、npm、PyPI 镜像地址均通过白名单校验，降低 SSRF 风险。
+- 支持 Maven、npm、PyPI、Cargo 包信息查询。
+- 支持 OSV 已知漏洞查询，包括 Maven、npm、PyPI 和 Cargo ecosystem。
+- Maven、npm、PyPI、Cargo 镜像地址均通过白名单校验，降低 SSRF 风险。
 - 使用 Caffeine 缓存上游查询结果，可按生态配置 TTL。
 - 支持 HTTP/HTTPS/SOCKS5 代理访问上游服务。
 - 支持按客户端 IP 限流。
@@ -51,8 +51,11 @@ Evernight 是一个基于 Spring AI MCP Server WebMVC 的 streamable HTTP MCP �
 | `npm_package_version_detail` | 查询 npm 指定版本元数据，包括依赖、peerDependencies、engines、bin、deprecated 和 tarball 信息。 |
 | `pypi_package_info` | 查询 PyPI 包元数据，包括最新版本、Python 版本要求、许可证、项目链接和 release 摘要。 |
 | `pypi_release_files` | 查询 PyPI 指定 release 的 wheel/sdist 文件、哈希、大小、上传时间和 yanked 状态。 |
-| `osv_vulnerability_lookup` | 通过 OSV 查询 Maven、npm、PyPI 包的已知漏洞。 |
-| `osv_batch_vulnerability_lookup` | 批量查询 Maven、npm、PyPI 包的 OSV 已知漏洞，最多 50 个包。 |
+| `cargo_crate_search` | 搜索 Cargo/crates.io crate；`registryBaseUrl` 可选，传入时必须是 Cargo registry API 白名单地址。 |
+| `cargo_crate_info` | 查询 Cargo/crates.io crate 元数据，包括最新版本、许可证、仓库、关键词、分类和版本摘要。 |
+| `cargo_crate_version_detail` | 查询 Cargo/crates.io crate 指定版本详情和依赖；`rustVersion` 表示 crate 声明的最低 Rust 版本或兼容要求，不代表实际编译时使用的 rustc 版本。 |
+| `osv_vulnerability_lookup` | 通过 OSV 查询 Maven、npm、PyPI、Cargo 包的已知漏洞。 |
+| `osv_batch_vulnerability_lookup` | 批量查询 Maven、npm、PyPI、Cargo 包的 OSV 已知漏洞，最多 50 个包。 |
 
 ## 快速开始
 
@@ -102,6 +105,8 @@ docker compose down
 
 工具入参中的 `repositoryBaseUrl` 或 `registryBaseUrl` 都是可选参数。传入时必须是对应生态白名单中的完整镜像地址；不传时使用逗号分隔列表中的第一个地址作为默认镜像。
 
+Cargo 只支持 crates.io API 兼容地址，例如 `https://crates.io/api/v1`。只提供 Cargo sparse index 的镜像地址不兼容本项目的 Cargo 查询工具。
+
 ### 常用环境变量
 
 | 变量名 | 默认值 | 说明 |
@@ -110,6 +115,7 @@ docker compose down
 | `MAVEN_REPOSITORY_REPOSITORIES` | `https://repo1.maven.org/maven2,https://maven.aliyun.com/repository/public` | Maven 仓库白名单，逗号分隔，第一项为默认仓库。 |
 | `NPM_REGISTRY_REPOSITORIES` | `https://registry.npmjs.org,https://registry.npmmirror.com` | npm registry 白名单，逗号分隔，第一项为默认 registry。 |
 | `PYPI_REPOSITORY_REPOSITORIES` | `https://pypi.org/pypi,https://pypi.tuna.tsinghua.edu.cn/pypi` | PyPI JSON API 白名单，逗号分隔，第一项为默认仓库。 |
+| `CARGO_REGISTRY_REPOSITORIES` | `https://crates.io/api/v1` | Cargo registry API 白名单，逗号分隔，第一项为默认 registry API；仅支持 crates.io API 兼容地址。 |
 | `EVERNIGHT_HTTP_PROXY_URL` | 空 | 上游代理地址，支持 `http://127.0.0.1:7890`、`https://127.0.0.1:7890`、`socks5://127.0.0.1:1080`。 |
 | `EVERNIGHT_HTTP_CONNECT_TIMEOUT_MILLIS` | `5000` | 上游 HTTP 连接超时时间，单位毫秒。 |
 | `EVERNIGHT_HTTP_READ_TIMEOUT_MILLIS` | `10000` | 上游 HTTP 读取超时时间，单位毫秒。 |
@@ -143,6 +149,7 @@ evernight:
     maven-ttl-seconds: 21600
     npm-ttl-seconds: 21600
     pypi-ttl-seconds: 21600
+    cargo-ttl-seconds: 21600
     osv-ttl-seconds: 3600
 ```
 

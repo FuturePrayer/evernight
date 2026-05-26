@@ -4,6 +4,7 @@ package cn.suhoan.evernight.whitelist;
 import cn.suhoan.evernight.whitelist.RepositoryWhitelistResolver;
 import java.util.List;
 
+import cn.suhoan.evernight.config.CargoRegistryProperties;
 import cn.suhoan.evernight.config.MavenRepositoryProperties;
 import cn.suhoan.evernight.whitelist.MavenRepositoryResolver;
 import cn.suhoan.evernight.config.NpmRegistryProperties;
@@ -15,8 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@EnableConfigurationProperties({ MavenRepositoryProperties.class, NpmRegistryProperties.class, PypiRepositoryProperties.class })
+@EnableConfigurationProperties({ MavenRepositoryProperties.class, NpmRegistryProperties.class, PypiRepositoryProperties.class,
+        CargoRegistryProperties.class })
 public class RepositoryWhitelistController {
+
+    private final CargoRegistryProperties cargoRegistryProperties;
+
+    private final CargoRegistryResolver cargoRegistryResolver;
 
     private final MavenRepositoryProperties mavenRepositoryProperties;
 
@@ -30,10 +36,13 @@ public class RepositoryWhitelistController {
 
     private final PypiRepositoryResolver pypiRepositoryResolver;
 
-    public RepositoryWhitelistController(MavenRepositoryProperties mavenRepositoryProperties,
+    public RepositoryWhitelistController(CargoRegistryProperties cargoRegistryProperties,
+            CargoRegistryResolver cargoRegistryResolver, MavenRepositoryProperties mavenRepositoryProperties,
             MavenRepositoryResolver mavenRepositoryResolver, NpmRegistryProperties npmRegistryProperties,
             NpmRegistryResolver npmRegistryResolver, PypiRepositoryProperties pypiRepositoryProperties,
             PypiRepositoryResolver pypiRepositoryResolver) {
+        this.cargoRegistryProperties = cargoRegistryProperties;
+        this.cargoRegistryResolver = cargoRegistryResolver;
         this.mavenRepositoryProperties = mavenRepositoryProperties;
         this.mavenRepositoryResolver = mavenRepositoryResolver;
         this.npmRegistryProperties = npmRegistryProperties;
@@ -50,13 +59,16 @@ public class RepositoryWhitelistController {
                 new RepositoryGroup(npmRegistryResolver.resolve(null),
                         RepositoryWhitelistResolver.normalizeRepositories(npmRegistryProperties.getRepositories())),
                 new RepositoryGroup(pypiRepositoryResolver.resolve(null),
-                        RepositoryWhitelistResolver.normalizeRepositories(pypiRepositoryProperties.getRepositories())));
+                        RepositoryWhitelistResolver.normalizeRepositories(pypiRepositoryProperties.getRepositories())),
+                new RepositoryGroup(cargoRegistryResolver.resolve(null),
+                        RepositoryWhitelistResolver.normalizeRepositories(cargoRegistryProperties.getRepositories())));
     }
 
     public record RepositoryWhitelistResponse(
             RepositoryGroup maven,
             RepositoryGroup npm,
-            RepositoryGroup pypi) {
+            RepositoryGroup pypi,
+            RepositoryGroup cargo) {
     }
 
     public record RepositoryGroup(

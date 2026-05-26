@@ -31,6 +31,11 @@ public class CacheProperties {
     private long pypiTtlSeconds = 21600;
 
     /**
+     * Cargo crate 信息缓存时间，单位秒。
+     */
+    private long cargoTtlSeconds = 21600;
+
+    /**
      * OSV 漏洞查询缓存时间，单位秒。
      */
     private long osvTtlSeconds = 3600;
@@ -73,6 +78,14 @@ public class CacheProperties {
 
     public void setPypiTtlSeconds(long pypiTtlSeconds) {
         this.pypiTtlSeconds = pypiTtlSeconds;
+    }
+
+    public long getCargoTtlSeconds() {
+        return cargoTtlSeconds;
+    }
+
+    public void setCargoTtlSeconds(long cargoTtlSeconds) {
+        this.cargoTtlSeconds = cargoTtlSeconds;
     }
 
     public long getOsvTtlSeconds() {

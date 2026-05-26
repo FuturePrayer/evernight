@@ -1,6 +1,7 @@
 package cn.suhoan.evernight.config;
 
 
+import cn.suhoan.evernight.tool.CargoCrateTools;
 import cn.suhoan.evernight.tool.MavenArtifactTools;
 import cn.suhoan.evernight.tool.MavenRepositoryTools;
 import cn.suhoan.evernight.tool.NpmPackageTools;
@@ -19,9 +20,11 @@ public class McpToolConfiguration {
             MavenArtifactTools mavenArtifactTools,
             NpmPackageTools npmPackageTools,
             PypiPackageTools pypiPackageTools,
+            CargoCrateTools cargoCrateTools,
             OsvVulnerabilityTools osvVulnerabilityTools) {
         return MethodToolCallbackProvider.builder()
-                .toolObjects(mavenRepositoryTools, mavenArtifactTools, npmPackageTools, pypiPackageTools, osvVulnerabilityTools)
+                .toolObjects(mavenRepositoryTools, mavenArtifactTools, npmPackageTools, pypiPackageTools,
+                        cargoCrateTools, osvVulnerabilityTools)
                 .build();
     }
 

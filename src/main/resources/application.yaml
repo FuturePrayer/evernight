@@ -31,6 +31,11 @@ pypi:
     repositories:
       - https://pypi.org/pypi
       - https://pypi.tuna.tsinghua.edu.cn/pypi
+cargo:
+  registry:
+    # Cargo registry API 白名单；第一个地址作为默认 registry API。仅支持 crates.io API 兼容地址，不支持 Cargo sparse index。
+    repositories:
+      - https://crates.io/api/v1
 evernight:
   http:
     # 访问上游服务时使用的代理地址，格式为 http://host:port、https://host:port 或 socks5://host:port；为空时不启用代理。
@@ -43,6 +48,7 @@ evernight:
     maven-ttl-seconds: 21600
     npm-ttl-seconds: 21600
     pypi-ttl-seconds: 21600
+    cargo-ttl-seconds: 21600
     osv-ttl-seconds: 3600
   rate-limit:
     enabled: true

@@ -104,11 +104,41 @@ const tools = [
     ]
   },
   {
+    name: "cargo_crate_search",
+    category: "cargo",
+    description: "搜索 Cargo/crates.io crate；registryBaseUrl 必须是 Cargo registry API 白名单地址。",
+    fields: [
+      { name: "keyword", label: "关键词", required: true, placeholder: "serde" },
+      { name: "perPage", label: "返回条数", type: "number", min: 1, max: 50, placeholder: "20" },
+      { name: "registryBaseUrl", label: "Cargo registry API", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
+    name: "cargo_crate_info",
+    category: "cargo",
+    description: "查询 Cargo/crates.io crate 元数据，包括最新版本、许可证、仓库、关键词、分类和版本摘要。",
+    fields: [
+      { name: "crateName", label: "crate 名称", required: true, placeholder: "serde" },
+      { name: "versionLimit", label: "版本数量", type: "number", min: 1, max: 100, placeholder: "20" },
+      { name: "registryBaseUrl", label: "Cargo registry API", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
+    name: "cargo_crate_version_detail",
+    category: "cargo",
+    description: "查询 Cargo/crates.io crate 指定版本详情和依赖；rustVersion 表示最低 Rust 版本或兼容要求，不代表实际编译时使用的 rustc 版本。",
+    fields: [
+      { name: "crateName", label: "crate 名称", required: true, placeholder: "serde" },
+      { name: "version", label: "版本", placeholder: "留空使用最新稳定版本" },
+      { name: "registryBaseUrl", label: "Cargo registry API", placeholder: "留空使用默认地址" }
+    ]
+  },
+  {
     name: "osv_vulnerability_lookup",
     category: "security",
-    description: "通过 OSV 查询 Maven、npm、PyPI 包的已知漏洞。",
+    description: "通过 OSV 查询 Maven、npm、PyPI、Cargo 包的已知漏洞。",
     fields: [
-      { name: "ecosystem", label: "生态", required: true, placeholder: "Maven / npm / PyPI" },
+      { name: "ecosystem", label: "生态", required: true, placeholder: "Maven / npm / PyPI / cargo" },
       { name: "packageName", label: "包名", required: true, placeholder: "com.fasterxml.jackson.core:jackson-databind" },
       { name: "version", label: "版本", placeholder: "2.9.0" }
     ]
@@ -116,14 +146,14 @@ const tools = [
   {
     name: "osv_batch_vulnerability_lookup",
     category: "security",
-    description: "批量查询 Maven、npm、PyPI 包的 OSV 已知漏洞。",
+    description: "批量查询 Maven、npm、PyPI、Cargo 包的 OSV 已知漏洞。",
     fields: [
       {
         name: "packages",
         label: "包列表 JSON",
         required: true,
         multiline: true,
-        placeholder: '[{"ecosystem":"npm","packageName":"react","version":"18.2.0"},{"ecosystem":"Maven","packageName":"com.fasterxml.jackson.core:jackson-databind","version":"2.9.0"}]'
+        placeholder: '[{"ecosystem":"npm","packageName":"react","version":"18.2.0"},{"ecosystem":"cargo","packageName":"serde","version":"1.0.0"}]'
       }
     ]
   }

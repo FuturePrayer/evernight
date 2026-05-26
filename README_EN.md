@@ -17,7 +17,7 @@
 
 ## Overview
 
-Evernight is a streamable HTTP MCP server built with Spring AI MCP Server WebMVC. It exposes common Maven, npm, PyPI, and OSV queries as structured MCP tools for vibe coding, dependency upgrades, vulnerability triage, and automated engineering workflows.
+Evernight is a streamable HTTP MCP server built with Spring AI MCP Server WebMVC. It exposes common Maven, npm, PyPI, Cargo, and OSV queries as structured MCP tools for vibe coding, dependency upgrades, vulnerability triage, and automated engineering workflows.
 
 Default endpoints:
 
@@ -28,9 +28,9 @@ Default endpoints:
 
 ## Features
 
-- Query Maven, npm, and PyPI package metadata.
-- Query known vulnerabilities through OSV.
-- Validate Maven, npm, and PyPI mirror URLs against explicit whitelists to reduce SSRF risk.
+- Query Maven, npm, PyPI, and Cargo package metadata.
+- Query known vulnerabilities through OSV, including Maven, npm, PyPI, and Cargo ecosystems.
+- Validate Maven, npm, PyPI, and Cargo mirror URLs against explicit whitelists to reduce SSRF risk.
 - Cache upstream responses with Caffeine and per-ecosystem TTL settings.
 - Support HTTP, HTTPS, and SOCKS5 proxies for upstream requests.
 - Rate-limit requests by client IP.
@@ -51,8 +51,11 @@ Default endpoints:
 | `npm_package_version_detail` | Query npm metadata for a specific version, including dependencies, peerDependencies, engines, bin, deprecated, and tarball information. |
 | `pypi_package_info` | Query PyPI package metadata, including latest version, Python requirements, license, project URLs, and release summary. |
 | `pypi_release_files` | Query wheel/sdist files for a PyPI release, including hashes, size, upload time, and yanked status. |
-| `osv_vulnerability_lookup` | Query known vulnerabilities for Maven, npm, and PyPI packages through OSV. |
-| `osv_batch_vulnerability_lookup` | Batch query OSV known vulnerabilities for Maven, npm, and PyPI packages, up to 50 packages. |
+| `cargo_crate_search` | Search Cargo/crates.io crates; `registryBaseUrl` is optional and must match the Cargo registry API whitelist when provided. |
+| `cargo_crate_info` | Query Cargo/crates.io crate metadata, including latest version, license, repository, keywords, categories, and version summary. |
+| `cargo_crate_version_detail` | Query Cargo/crates.io crate version details and dependencies; `rustVersion` indicates the crate-declared minimum Rust version or compatibility requirement, not the rustc version that actually built it. |
+| `osv_vulnerability_lookup` | Query known vulnerabilities for Maven, npm, PyPI, and Cargo packages through OSV. |
+| `osv_batch_vulnerability_lookup` | Batch query OSV known vulnerabilities for Maven, npm, PyPI, and Cargo packages, up to 50 packages. |
 
 ## Quick Start
 
@@ -100,6 +103,8 @@ docker compose down
 
 Tool parameters named `repositoryBaseUrl` or `registryBaseUrl` are optional. When provided, the URL must match the whitelist for its ecosystem. When omitted, the first URL in the comma-separated list is used as the default mirror.
 
+Cargo supports crates.io API-compatible base URLs only, such as `https://crates.io/api/v1`. Cargo sparse-index-only mirrors are not compatible with the Cargo query tools.
+
 ### Common Environment Variables
 
 | Variable | Default | Description |
@@ -108,6 +113,7 @@ Tool parameters named `repositoryBaseUrl` or `registryBaseUrl` are optional. Whe
 | `MAVEN_REPOSITORY_REPOSITORIES` | `https://repo1.maven.org/maven2,https://maven.aliyun.com/repository/public` | Maven repository whitelist, comma-separated; the first item is the default repository. |
 | `NPM_REGISTRY_REPOSITORIES` | `https://registry.npmjs.org,https://registry.npmmirror.com` | npm registry whitelist, comma-separated; the first item is the default registry. |
 | `PYPI_REPOSITORY_REPOSITORIES` | `https://pypi.org/pypi,https://pypi.tuna.tsinghua.edu.cn/pypi` | PyPI JSON API whitelist, comma-separated; the first item is the default repository. |
+| `CARGO_REGISTRY_REPOSITORIES` | `https://crates.io/api/v1` | Cargo registry API whitelist, comma-separated; the first item is the default registry API. Only crates.io API-compatible URLs are supported. |
 | `EVERNIGHT_HTTP_PROXY_URL` | empty | Upstream proxy URL. Supports `http://127.0.0.1:7890`, `https://127.0.0.1:7890`, and `socks5://127.0.0.1:1080`. |
 | `EVERNIGHT_HTTP_CONNECT_TIMEOUT_MILLIS` | `5000` | Upstream HTTP connection timeout in milliseconds. |
 | `EVERNIGHT_HTTP_READ_TIMEOUT_MILLIS` | `10000` | Upstream HTTP read timeout in milliseconds. |
@@ -141,6 +147,7 @@ evernight:
     maven-ttl-seconds: 21600
     npm-ttl-seconds: 21600
     pypi-ttl-seconds: 21600
+    cargo-ttl-seconds: 21600
     osv-ttl-seconds: 3600
 ```
 

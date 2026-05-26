@@ -12,6 +12,7 @@ services:
       MAVEN_REPOSITORY_REPOSITORIES: https://repo1.maven.org/maven2,https://maven.aliyun.com/repository/public
       NPM_REGISTRY_REPOSITORIES: https://registry.npmjs.org,https://registry.npmmirror.com
       PYPI_REPOSITORY_REPOSITORIES: https://pypi.org/pypi,https://pypi.tuna.tsinghua.edu.cn/pypi
+      CARGO_REGISTRY_REPOSITORIES: https://crates.io/api/v1
       EVERNIGHT_HTTP_PROXY_URL:
       EVERNIGHT_HTTP_CONNECT_TIMEOUT_MILLIS: 5000
       EVERNIGHT_HTTP_READ_TIMEOUT_MILLIS: 10000

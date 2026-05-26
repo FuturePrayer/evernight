@@ -21,7 +21,7 @@ async function loadRepositories() {
 
 function renderRepositories(data) {
   const grid = document.querySelector("#repositoryGrid");
-  const labels = { maven: "Maven", npm: "npm", pypi: "PyPI" };
+  const labels = { maven: "Maven", npm: "npm", pypi: "PyPI", cargo: "Cargo" };
   grid.innerHTML = Object.entries(labels).map(([key, label]) => {
     const group = data[key] || { repositories: [] };
     const repositories = Array.isArray(group.repositories) ? group.repositories : Object.values(group.repositories || {});
