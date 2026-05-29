@@ -21,7 +21,7 @@ public class PypiPackageTools {
         this.pypiPackageClient = pypiPackageClient;
     }
 
-    @Tool(name = "pypi_package_info", description = "查询 PyPI 包元数据，包括最新版本、Python 版本要求、许可证、项目链接、分类器和版本摘要。repositoryBaseUrl 可选，传入时必须是 PyPI 仓库白名单中的镜像地址。")
+    @Tool(name = "pypi_package_info", description = "用于 Python 项目的 PyPI 包，查询元数据，包括最新版本、Python 版本要求、许可证、项目链接、分类器和版本摘要。repositoryBaseUrl 可选，传入时必须是 PyPI 仓库白名单中的镜像地址。")
     public PypiPackageInfo packageInfo(
             @ToolParam(description = "PyPI 包名，例如 requests") String packageName,
             @ToolParam(required = false, description = "最多返回多少个 release 版本号，默认 20，最大 100") Integer releaseLimit,
@@ -31,7 +31,7 @@ public class PypiPackageTools {
         return pypiPackageClient.packageInfo(packageName, releaseLimit, repositoryBaseUrl);
     }
 
-    @Tool(name = "pypi_release_files", description = "查询 PyPI 指定 release 的文件列表，包括 wheel/sdist 文件名、Python tag、大小、上传时间、哈希和 yanked 状态。version 可选，留空时使用最新版本。repositoryBaseUrl 可选，传入时必须是 PyPI 仓库白名单中的镜像地址。")
+    @Tool(name = "pypi_release_files", description = "用于 Python 项目的 PyPI 包，查询指定 release 的文件列表，包括 wheel/sdist 文件名、Python tag、大小、上传时间、哈希和 yanked 状态。version 可选，留空时使用最新版本。repositoryBaseUrl 可选，传入时必须是 PyPI 仓库白名单中的镜像地址。")
     public PypiReleaseFiles releaseFiles(
             @ToolParam(description = "PyPI 包名，例如 requests") String packageName,
             @ToolParam(required = false, description = "PyPI release 版本号；留空使用最新版本") String version,

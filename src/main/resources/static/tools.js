@@ -2,7 +2,7 @@ const tools = [
   {
     name: "maven_latest_version",
     category: "maven",
-    description: "根据 Maven groupId 和 artifactId 查询最新版本。",
+    description: "用于 Java/JVM 项目的 Maven 依赖坐标，根据 groupId 和 artifactId 查询最新版本。",
     fields: [
       { name: "groupId", label: "groupId", required: true, placeholder: "org.springframework.boot" },
       { name: "artifactId", label: "artifactId", required: true, placeholder: "spring-boot-starter-web" },
@@ -12,7 +12,7 @@ const tools = [
   {
     name: "maven_version_list",
     category: "maven",
-    description: "查询 Maven 构件的完整版本列表。",
+    description: "用于 Java/JVM 项目的 Maven 构件，查询完整版本列表。",
     fields: [
       { name: "groupId", label: "groupId", required: true, placeholder: "junit" },
       { name: "artifactId", label: "artifactId", required: true, placeholder: "junit" },
@@ -22,7 +22,7 @@ const tools = [
   {
     name: "maven_artifact_search",
     category: "maven",
-    description: "按关键词、groupId 或 artifactId 搜索 Maven Artifact 坐标。",
+    description: "用于 Java/JVM 项目，按关键词、groupId 或 artifactId 搜索 Maven Artifact 坐标。",
     fields: [
       { name: "keyword", label: "关键词", placeholder: "spring boot" },
       { name: "groupId", label: "groupId", placeholder: "org.springframework.boot" },
@@ -34,7 +34,7 @@ const tools = [
   {
     name: "maven_artifact_detail",
     category: "maven",
-    description: "查询 Maven Artifact 详情，包括 POM 描述、许可证、SCM 和开发者信息。",
+    description: "用于 Java/JVM 项目，查询 Maven Artifact 详情，包括 POM 描述、许可证、SCM 和开发者信息。",
     fields: [
       { name: "groupId", label: "groupId", required: true, placeholder: "com.fasterxml.jackson.core" },
       { name: "artifactId", label: "artifactId", required: true, placeholder: "jackson-databind" },
@@ -44,7 +44,7 @@ const tools = [
   {
     name: "maven_dependency_detail",
     category: "maven",
-    description: "查询指定 Maven 坐标和版本的 POM 依赖详情。",
+    description: "用于 Java/JVM 项目，查询指定 Maven 坐标和版本的 POM 依赖详情。",
     fields: [
       { name: "groupId", label: "groupId", required: true, placeholder: "org.springframework.boot" },
       { name: "artifactId", label: "artifactId", required: true, placeholder: "spring-boot-starter-web" },
@@ -55,7 +55,7 @@ const tools = [
   {
     name: "maven_artifact_java_version",
     category: "maven",
-    description: "只读取 POM 中声明的 Java 版本字段；这些字段表示目标兼容版本或要求的 Java 版本，不一定是实际执行编译的 JDK。",
+    description: "用于 Java/JVM 项目，只读取 POM 中声明的 Java 版本字段；这些字段表示目标兼容版本或要求的 Java 版本，不一定是实际执行编译的 JDK。",
     fields: [
       { name: "groupId", label: "groupId", required: true, placeholder: "org.springframework.boot" },
       { name: "artifactId", label: "artifactId", required: true, placeholder: "spring-boot-starter-web" },
@@ -66,7 +66,7 @@ const tools = [
   {
     name: "npm_package_info",
     category: "npm",
-    description: "查询 npm registry 包元数据，包括 latest、dist-tags、许可证、仓库和版本摘要。",
+    description: "用于 JavaScript/TypeScript/Node.js 项目的 npm 包，查询 registry 元数据，包括 latest、dist-tags、许可证、仓库和版本摘要。",
     fields: [
       { name: "packageName", label: "包名", required: true, placeholder: "@types/node" },
       { name: "versionLimit", label: "版本数量", type: "number", min: 1, max: 100, placeholder: "20" },
@@ -76,7 +76,7 @@ const tools = [
   {
     name: "npm_package_version_detail",
     category: "npm",
-    description: "查询 npm 指定版本元数据，包括依赖、engines、bin、deprecated 和 tarball 信息。",
+    description: "用于 JavaScript/TypeScript/Node.js 项目的 npm 包，查询指定版本元数据，包括依赖、engines、bin、deprecated 和 tarball 信息。",
     fields: [
       { name: "packageName", label: "包名", required: true, placeholder: "react" },
       { name: "version", label: "版本", placeholder: "留空使用 latest" },
@@ -86,7 +86,7 @@ const tools = [
   {
     name: "pypi_package_info",
     category: "pypi",
-    description: "查询 PyPI 包元数据，包括 Python 版本要求、分类器和项目链接。",
+    description: "用于 Python 项目的 PyPI 包，查询元数据，包括 Python 版本要求、分类器和项目链接。",
     fields: [
       { name: "packageName", label: "包名", required: true, placeholder: "requests" },
       { name: "releaseLimit", label: "release 数量", type: "number", min: 1, max: 100, placeholder: "20" },
@@ -96,7 +96,7 @@ const tools = [
   {
     name: "pypi_release_files",
     category: "pypi",
-    description: "查询 PyPI 指定 release 的 wheel/sdist 文件、哈希、大小、上传时间和 yanked 状态。",
+    description: "用于 Python 项目的 PyPI 包，查询指定 release 的 wheel/sdist 文件、哈希、大小、上传时间和 yanked 状态。",
     fields: [
       { name: "packageName", label: "包名", required: true, placeholder: "requests" },
       { name: "version", label: "版本", placeholder: "留空使用最新版本" },
@@ -106,7 +106,7 @@ const tools = [
   {
     name: "cargo_crate_search",
     category: "cargo",
-    description: "搜索 Cargo/crates.io crate；registryBaseUrl 必须是 Cargo registry API 白名单地址。",
+    description: "用于 Rust 项目的 Cargo/crates.io crate 搜索；registryBaseUrl 必须是 Cargo registry API 白名单地址。",
     fields: [
       { name: "keyword", label: "关键词", required: true, placeholder: "serde" },
       { name: "perPage", label: "返回条数", type: "number", min: 1, max: 50, placeholder: "20" },
@@ -116,7 +116,7 @@ const tools = [
   {
     name: "cargo_crate_info",
     category: "cargo",
-    description: "查询 Cargo/crates.io crate 元数据，包括最新版本、许可证、仓库、关键词、分类和版本摘要。",
+    description: "用于 Rust 项目的 Cargo/crates.io crate，查询元数据，包括最新版本、许可证、仓库、关键词、分类和版本摘要。",
     fields: [
       { name: "crateName", label: "crate 名称", required: true, placeholder: "serde" },
       { name: "versionLimit", label: "版本数量", type: "number", min: 1, max: 100, placeholder: "20" },
@@ -126,7 +126,7 @@ const tools = [
   {
     name: "cargo_crate_version_detail",
     category: "cargo",
-    description: "查询 Cargo/crates.io crate 指定版本详情和依赖；rustVersion 表示最低 Rust 版本或兼容要求，不代表实际编译时使用的 rustc 版本。",
+    description: "用于 Rust 项目的 Cargo/crates.io crate，查询指定版本详情和依赖；rustVersion 表示最低 Rust 版本或兼容要求，不代表实际编译时使用的 rustc 版本。",
     fields: [
       { name: "crateName", label: "crate 名称", required: true, placeholder: "serde" },
       { name: "version", label: "版本", placeholder: "留空使用最新稳定版本" },
@@ -136,7 +136,7 @@ const tools = [
   {
     name: "osv_vulnerability_lookup",
     category: "security",
-    description: "通过 OSV 查询 Maven、npm、PyPI、Cargo 包的已知漏洞。",
+    description: "跨生态安全工具，通过 OSV 查询已知漏洞；Maven=Java/JVM，npm=JavaScript/TypeScript/Node.js，PyPI=Python，Cargo/crates.io=Rust。",
     fields: [
       { name: "ecosystem", label: "生态", required: true, placeholder: "Maven / npm / PyPI / cargo" },
       { name: "packageName", label: "包名", required: true, placeholder: "com.fasterxml.jackson.core:jackson-databind" },
@@ -146,7 +146,7 @@ const tools = [
   {
     name: "osv_batch_vulnerability_lookup",
     category: "security",
-    description: "批量查询 Maven、npm、PyPI、Cargo 包的 OSV 已知漏洞。",
+    description: "跨生态安全工具，批量查询 OSV 已知漏洞；Maven=Java/JVM，npm=JavaScript/TypeScript/Node.js，PyPI=Python，Cargo/crates.io=Rust。",
     fields: [
       {
         name: "packages",

@@ -41,21 +41,21 @@ Default endpoints:
 
 | Tool | Description |
 | --- | --- |
-| `maven_latest_version` | Query the latest Maven version by `groupId` and `artifactId`. |
-| `maven_version_list` | Query the full Maven version list. |
-| `maven_artifact_search` | Search Maven artifacts; non-Maven Central mirrors support exact `groupId` + `artifactId` lookup only. |
-| `maven_artifact_detail` | Query Maven artifact details, including POM description, licenses, SCM, and developers. |
-| `maven_dependency_detail` | Query dependency details for a Maven coordinate and version, including parent, dependencies, and dependencyManagement. |
-| `maven_artifact_java_version` | Read Java version declarations from the Maven artifact POM only; these fields indicate target compatibility or required Java version, not necessarily the JDK that actually performed the build. |
-| `npm_package_info` | Query npm package metadata, including `latest`, `dist-tags`, license, repository, dependencies, and version summary. |
-| `npm_package_version_detail` | Query npm metadata for a specific version, including dependencies, peerDependencies, engines, bin, deprecated, and tarball information. |
-| `pypi_package_info` | Query PyPI package metadata, including latest version, Python requirements, license, project URLs, and release summary. |
-| `pypi_release_files` | Query wheel/sdist files for a PyPI release, including hashes, size, upload time, and yanked status. |
-| `cargo_crate_search` | Search Cargo/crates.io crates; `registryBaseUrl` is optional and must match the Cargo registry API whitelist when provided. |
-| `cargo_crate_info` | Query Cargo/crates.io crate metadata, including latest version, license, repository, keywords, categories, and version summary. |
-| `cargo_crate_version_detail` | Query Cargo/crates.io crate version details and dependencies; `rustVersion` indicates the crate-declared minimum Rust version or compatibility requirement, not the rustc version that actually built it. |
-| `osv_vulnerability_lookup` | Query known vulnerabilities for Maven, npm, PyPI, and Cargo packages through OSV. |
-| `osv_batch_vulnerability_lookup` | Batch query OSV known vulnerabilities for Maven, npm, PyPI, and Cargo packages, up to 50 packages. |
+| `maven_latest_version` | For Java/JVM projects using Maven coordinates; queries the latest Maven version by `groupId` and `artifactId`. |
+| `maven_version_list` | For Java/JVM projects using Maven coordinates; queries the full Maven version list. |
+| `maven_artifact_search` | For Java/JVM projects; searches Maven artifacts. Non-Maven Central mirrors support exact `groupId` + `artifactId` lookup only. |
+| `maven_artifact_detail` | For Java/JVM projects; queries Maven artifact details, including POM description, licenses, SCM, and developers. |
+| `maven_dependency_detail` | For Java/JVM projects; queries dependency details for a Maven coordinate and version, including parent, dependencies, and dependencyManagement. |
+| `maven_artifact_java_version` | For Java/JVM projects; reads Java version declarations from the Maven artifact POM only. These fields indicate target compatibility or required Java version, not necessarily the JDK that actually performed the build. |
+| `npm_package_info` | For JavaScript/TypeScript/Node.js projects using npm packages; queries metadata including `latest`, `dist-tags`, license, repository, dependencies, and version summary. |
+| `npm_package_version_detail` | For JavaScript/TypeScript/Node.js projects using npm packages; queries metadata for a specific version, including dependencies, peerDependencies, engines, bin, deprecated, and tarball information. |
+| `pypi_package_info` | For Python projects using PyPI packages; queries metadata including latest version, Python requirements, license, project URLs, and release summary. |
+| `pypi_release_files` | For Python projects using PyPI packages; queries wheel/sdist files for a PyPI release, including hashes, size, upload time, and yanked status. |
+| `cargo_crate_search` | For Rust projects using Cargo/crates.io crates; searches crates. `registryBaseUrl` is optional and must match the Cargo registry API whitelist when provided. |
+| `cargo_crate_info` | For Rust projects using Cargo/crates.io crates; queries crate metadata including latest version, license, repository, keywords, categories, and version summary. |
+| `cargo_crate_version_detail` | For Rust projects using Cargo/crates.io crates; queries version details and dependencies. `rustVersion` indicates the crate-declared minimum Rust version or compatibility requirement, not the rustc version that actually built it. |
+| `osv_vulnerability_lookup` | Cross-ecosystem security tool for OSV vulnerability lookup: Maven=Java/JVM, npm=JavaScript/TypeScript/Node.js, PyPI=Python, Cargo/crates.io=Rust. |
+| `osv_batch_vulnerability_lookup` | Cross-ecosystem security tool for batch OSV vulnerability lookup: Maven=Java/JVM, npm=JavaScript/TypeScript/Node.js, PyPI=Python, Cargo/crates.io=Rust; up to 50 packages. |
 
 ## Quick Start
 

@@ -21,7 +21,7 @@ public class NpmPackageTools {
         this.npmPackageClient = npmPackageClient;
     }
 
-    @Tool(name = "npm_package_info", description = "查询 npm 包元数据，包括 latest、dist-tags、许可证、仓库、依赖和版本摘要。registryBaseUrl 可选，传入时必须是 npm registry 白名单中的镜像地址。")
+    @Tool(name = "npm_package_info", description = "用于 JavaScript/TypeScript/Node.js 项目的 npm 包，查询元数据，包括 latest、dist-tags、许可证、仓库、依赖和版本摘要。registryBaseUrl 可选，传入时必须是 npm registry 白名单中的镜像地址。")
     public NpmPackageInfo packageInfo(
             @ToolParam(description = "npm 包名，例如 react 或 @types/node") String packageName,
             @ToolParam(required = false, description = "最多返回多少个版本号，默认 20，最大 100") Integer versionLimit,
@@ -31,7 +31,7 @@ public class NpmPackageTools {
         return npmPackageClient.packageInfo(packageName, versionLimit, registryBaseUrl);
     }
 
-    @Tool(name = "npm_package_version_detail", description = "查询 npm 指定版本元数据，包括依赖、peerDependencies、engines、bin、deprecated 和 tarball 信息。version 可选，留空时使用 latest。registryBaseUrl 可选，传入时必须是 npm registry 白名单中的镜像地址。")
+    @Tool(name = "npm_package_version_detail", description = "用于 JavaScript/TypeScript/Node.js 项目的 npm 包，查询指定版本元数据，包括依赖、peerDependencies、engines、bin、deprecated 和 tarball 信息。version 可选，留空时使用 latest。registryBaseUrl 可选，传入时必须是 npm registry 白名单中的镜像地址。")
     public NpmPackageVersionDetail versionDetail(
             @ToolParam(description = "npm 包名，例如 react 或 @types/node") String packageName,
             @ToolParam(required = false, description = "npm 版本号；留空使用 latest") String version,

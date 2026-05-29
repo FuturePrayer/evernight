@@ -20,7 +20,7 @@ public class MavenRepositoryTools {
         this.mavenMetadataClient = mavenMetadataClient;
     }
 
-    @Tool(name = "maven_latest_version", description = "根据 groupId 和 artifactId 查询 Maven 仓库中的最新版本。repositoryBaseUrl 可选，传入时必须是 Maven 仓库白名单中的镜像地址。")
+    @Tool(name = "maven_latest_version", description = "用于 Java/JVM 项目的 Maven 依赖坐标，根据 groupId 和 artifactId 查询 Maven 仓库中的最新版本。repositoryBaseUrl 可选，传入时必须是 Maven 仓库白名单中的镜像地址。")
     public MavenVersionInfo latestVersion(
             @ToolParam(description = "Maven groupId，例如 org.springframework.boot") String groupId,
             @ToolParam(description = "Maven artifactId，例如 spring-boot-starter") String artifactId,
@@ -30,7 +30,7 @@ public class MavenRepositoryTools {
         return mavenMetadataClient.getLatestVersion(groupId, artifactId, repositoryBaseUrl);
     }
 
-    @Tool(name = "maven_version_list", description = "根据 groupId 和 artifactId 查询 Maven 仓库中的全部版本列表。repositoryBaseUrl 可选，传入时必须是 Maven 仓库白名单中的镜像地址。")
+    @Tool(name = "maven_version_list", description = "用于 Java/JVM 项目的 Maven 依赖坐标，根据 groupId 和 artifactId 查询 Maven 仓库中的全部版本列表。repositoryBaseUrl 可选，传入时必须是 Maven 仓库白名单中的镜像地址。")
     public MavenVersionInfo versionList(
             @ToolParam(description = "Maven groupId，例如 org.springframework.boot") String groupId,
             @ToolParam(description = "Maven artifactId，例如 spring-boot-starter") String artifactId,

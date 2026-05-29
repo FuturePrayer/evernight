@@ -41,21 +41,21 @@ Evernight 是一个基于 Spring AI MCP Server WebMVC 的 streamable HTTP MCP �
 
 | 工具 | 说明 |
 | --- | --- |
-| `maven_latest_version` | 根据 `groupId` 和 `artifactId` 查询 Maven 仓库最新版本。 |
-| `maven_version_list` | 查询 Maven 仓库中的完整版本列表。 |
-| `maven_artifact_search` | 搜索 Maven Artifact；非 Maven Central 镜像仅支持 `groupId` + `artifactId` 精确查询。 |
-| `maven_artifact_detail` | 查询 Maven Artifact 详情，包括 POM 描述、许可证、SCM 和开发者信息。 |
-| `maven_dependency_detail` | 查询指定 Maven 坐标和版本的 POM 依赖详情，包括 parent、dependencies 和 dependencyManagement。 |
-| `maven_artifact_java_version` | 只读取 Maven Artifact POM 中声明的 Java 版本字段；这些字段表示“目标兼容版本”或“要求的 Java 版本”，不一定是实际执行编译的 JDK。 |
-| `npm_package_info` | 查询 npm 包元数据，包括 `latest`、`dist-tags`、许可证、仓库、依赖和版本摘要。 |
-| `npm_package_version_detail` | 查询 npm 指定版本元数据，包括依赖、peerDependencies、engines、bin、deprecated 和 tarball 信息。 |
-| `pypi_package_info` | 查询 PyPI 包元数据，包括最新版本、Python 版本要求、许可证、项目链接和 release 摘要。 |
-| `pypi_release_files` | 查询 PyPI 指定 release 的 wheel/sdist 文件、哈希、大小、上传时间和 yanked 状态。 |
-| `cargo_crate_search` | 搜索 Cargo/crates.io crate；`registryBaseUrl` 可选，传入时必须是 Cargo registry API 白名单地址。 |
-| `cargo_crate_info` | 查询 Cargo/crates.io crate 元数据，包括最新版本、许可证、仓库、关键词、分类和版本摘要。 |
-| `cargo_crate_version_detail` | 查询 Cargo/crates.io crate 指定版本详情和依赖；`rustVersion` 表示 crate 声明的最低 Rust 版本或兼容要求，不代表实际编译时使用的 rustc 版本。 |
-| `osv_vulnerability_lookup` | 通过 OSV 查询 Maven、npm、PyPI、Cargo 包的已知漏洞。 |
-| `osv_batch_vulnerability_lookup` | 批量查询 Maven、npm、PyPI、Cargo 包的 OSV 已知漏洞，最多 50 个包。 |
+| `maven_latest_version` | 用于 Java/JVM 项目的 Maven 依赖坐标，根据 `groupId` 和 `artifactId` 查询 Maven 仓库最新版本。 |
+| `maven_version_list` | 用于 Java/JVM 项目的 Maven 依赖坐标，查询 Maven 仓库中的完整版本列表。 |
+| `maven_artifact_search` | 用于 Java/JVM 项目，搜索 Maven Artifact；非 Maven Central 镜像仅支持 `groupId` + `artifactId` 精确查询。 |
+| `maven_artifact_detail` | 用于 Java/JVM 项目，查询 Maven Artifact 详情，包括 POM 描述、许可证、SCM 和开发者信息。 |
+| `maven_dependency_detail` | 用于 Java/JVM 项目，查询指定 Maven 坐标和版本的 POM 依赖详情，包括 parent、dependencies 和 dependencyManagement。 |
+| `maven_artifact_java_version` | 用于 Java/JVM 项目，只读取 Maven Artifact POM 中声明的 Java 版本字段；这些字段表示“目标兼容版本”或“要求的 Java 版本”，不一定是实际执行编译的 JDK。 |
+| `npm_package_info` | 用于 JavaScript/TypeScript/Node.js 项目的 npm 包，查询元数据，包括 `latest`、`dist-tags`、许可证、仓库、依赖和版本摘要。 |
+| `npm_package_version_detail` | 用于 JavaScript/TypeScript/Node.js 项目的 npm 包，查询指定版本元数据，包括依赖、peerDependencies、engines、bin、deprecated 和 tarball 信息。 |
+| `pypi_package_info` | 用于 Python 项目的 PyPI 包，查询元数据，包括最新版本、Python 版本要求、许可证、项目链接和 release 摘要。 |
+| `pypi_release_files` | 用于 Python 项目的 PyPI 包，查询指定 release 的 wheel/sdist 文件、哈希、大小、上传时间和 yanked 状态。 |
+| `cargo_crate_search` | 用于 Rust 项目的 Cargo/crates.io crate 搜索；`registryBaseUrl` 可选，传入时必须是 Cargo registry API 白名单地址。 |
+| `cargo_crate_info` | 用于 Rust 项目的 Cargo/crates.io crate，查询元数据，包括最新版本、许可证、仓库、关键词、分类和版本摘要。 |
+| `cargo_crate_version_detail` | 用于 Rust 项目的 Cargo/crates.io crate，查询指定版本详情和依赖；`rustVersion` 表示 crate 声明的最低 Rust 版本或兼容要求，不代表实际编译时使用的 rustc 版本。 |
+| `osv_vulnerability_lookup` | 跨生态安全工具，通过 OSV 查询已知漏洞；Maven=Java/JVM，npm=JavaScript/TypeScript/Node.js，PyPI=Python，Cargo/crates.io=Rust。 |
+| `osv_batch_vulnerability_lookup` | 跨生态安全工具，批量查询 OSV 已知漏洞；Maven=Java/JVM，npm=JavaScript/TypeScript/Node.js，PyPI=Python，Cargo/crates.io=Rust，最多 50 个包。 |
 
 ## 快速开始
 
